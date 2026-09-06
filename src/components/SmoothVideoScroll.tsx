@@ -236,21 +236,12 @@ export default function SmoothVideoScroll({
         {/* Cinematic Vignette Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/60 pointer-events-none" />
 
-        {/* Top Floating Nav / Skip Button */}
-        <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-20 pointer-events-auto">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs font-mono tracking-widest text-zinc-300 uppercase">
-              Vjinunnati • Interactive Intro
-            </span>
-          </div>
-
-          <button
-            onClick={scrollToContent}
-            className="text-xs font-medium tracking-wide uppercase px-4 py-2 rounded-full border border-white/20 bg-black/40 backdrop-blur-md hover:bg-white/10 transition-colors cursor-pointer text-zinc-200 hover:text-white"
-          >
-            Skip Intro ↓
-          </button>
+        {/* Top Floating Brand Badge */}
+        <div className="absolute top-6 left-6 flex items-center gap-2 z-20 pointer-events-auto">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-xs font-mono tracking-widest text-zinc-300 uppercase">
+            Vijinunnati
+          </span>
         </div>
 
         {/* Text Storyline Overlays */}
