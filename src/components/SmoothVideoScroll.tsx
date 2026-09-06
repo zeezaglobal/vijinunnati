@@ -14,10 +14,11 @@ export default function SmoothVideoScroll({
   const TOTAL_FRAMES = totalFrames;
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<(HTMLImageElement | null)[]>([]);
 
-  const targetFrameRef = useRef(0);
-  const currentFrameRef = useRef(0);
+  const targetProgressRef = useRef(0);
+  const currentProgressRef = useRef(0);
   const rafIdRef = useRef<number | null>(null);
   const lastDrawnFrameRef = useRef<number>(-1);
 
@@ -48,6 +49,8 @@ export default function SmoothVideoScroll({
   const renderFrame = useCallback(
     (index: number) => {
       const clamped = Math.max(0, Math.min(TOTAL_FRAMES - 1, index));
+      if (clamped === lastDrawnFrameRef.current) return;
+
       let img = imagesRef.current[clamped];
 
       // Fallback to nearest loaded frame
@@ -97,7 +100,9 @@ export default function SmoothVideoScroll({
 
     // Redraw current frame on resize
     if (lastDrawnFrameRef.current >= 0) {
-      renderFrame(lastDrawnFrameRef.current);
+      const lastIndex = lastDrawnFrameRef.current;
+      lastDrawnFrameRef.current = -1;
+      renderFrame(lastIndex);
     }
   }, [renderFrame]);
 
@@ -132,7 +137,7 @@ export default function SmoothVideoScroll({
     return () => window.removeEventListener("resize", handleResize);
   }, [handleResize]);
 
-  // Scroll tracking with RAF Lerp (Linear Interpolation) loop for butter-smooth scrubbing
+  // Scroll tracking with RAF Lerp loop driving both video frame and text reveal
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
@@ -145,27 +150,46 @@ export default function SmoothVideoScroll({
         Math.max(-rect.top / totalScrollableDistance, 0),
         1
       );
-      targetFrameRef.current = progress * (TOTAL_FRAMES - 1);
+      targetProgressRef.current = progress;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
-    // The animation loop continuously lerps currentFrame towards targetFrame
-    const updateMotion = () => {
-      const diff = targetFrameRef.current - currentFrameRef.current;
+    // Constant parameters
+    const VIDEO_END_PROGRESS = 0.65; // Video completes at 65% scroll
+    const TEXT_START_PROGRESS = 0.65; // Text begins fading in at 65% scroll
 
-      // When difference is noticeable, interpolate smoothly
-      if (Math.abs(diff) > 0.02) {
-        // Damping factor 0.09 creates that signature Apple silky inertia
-        currentFrameRef.current += diff * 0.09;
-        renderFrame(Math.round(currentFrameRef.current));
-      } else if (
-        Math.round(currentFrameRef.current) !==
-        Math.round(targetFrameRef.current)
-      ) {
-        currentFrameRef.current = targetFrameRef.current;
-        renderFrame(Math.round(currentFrameRef.current));
+    const updateMotion = () => {
+      const diff = targetProgressRef.current - currentProgressRef.current;
+
+      // Lerp smoothing with 0.08 damping factor
+      if (Math.abs(diff) > 0.0001) {
+        currentProgressRef.current += diff * 0.08;
+      } else {
+        currentProgressRef.current = targetProgressRef.current;
+      }
+
+      const p = currentProgressRef.current;
+
+      // 1. Scrub video: 0.0 to VIDEO_END_PROGRESS maps to frame 0 -> 144
+      const videoRatio = Math.min(p / VIDEO_END_PROGRESS, 1);
+      const targetFrame = Math.round(videoRatio * (TOTAL_FRAMES - 1));
+      renderFrame(targetFrame);
+
+      // 2. Reveal text: TEXT_START_PROGRESS to 1.0 maps to text opacity 0 -> 1
+      const rawTextProgress = Math.max(
+        0,
+        Math.min(1, (p - TEXT_START_PROGRESS) / (1 - TEXT_START_PROGRESS))
+      );
+
+      if (textRef.current) {
+        textRef.current.style.opacity = `${rawTextProgress}`;
+        textRef.current.style.transform = `translateY(${
+          (1 - rawTextProgress) * 24
+        }px) scale(${0.96 + rawTextProgress * 0.04})`;
+        textRef.current.style.pointerEvents =
+          rawTextProgress > 0.7 ? "auto" : "none";
       }
 
       rafIdRef.current = requestAnimationFrame(updateMotion);
@@ -182,15 +206,51 @@ export default function SmoothVideoScroll({
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[450vh] bg-black"
+      className="relative w-full h-[380vh] bg-white text-zinc-900"
     >
       {/* Sticky Fullscreen Viewport */}
-      <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center">
+      <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center bg-white">
         {/* Hardware Accelerated Canvas */}
         <canvas
           ref={canvasRef}
           className="absolute inset-0 block w-full h-full object-cover pointer-events-none"
         />
+
+        {/* Text revealed on the white page: "Vijin weds Unnati" */}
+        <div
+          ref={textRef}
+          style={{ opacity: 0, transform: "translateY(24px) scale(0.96)" }}
+          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none select-none z-10"
+        >
+          <div className="max-w-4xl flex flex-col items-center">
+            {/* Elegant Top Decorative Accent */}
+            <div className="flex items-center justify-center gap-4 mb-6 sm:mb-8">
+              <div className="h-[1px] w-12 sm:w-20 bg-amber-700/30" />
+              <span className="text-[11px] sm:text-xs tracking-[0.35em] uppercase font-sans font-medium text-amber-900/70">
+                Together with their families
+              </span>
+              <div className="h-[1px] w-12 sm:w-20 bg-amber-700/30" />
+            </div>
+
+            {/* Main Names: Vijin weds Unnati */}
+            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-serif text-zinc-900 tracking-tight font-normal leading-none">
+              <span className="block font-medium text-zinc-950">Vijin</span>
+              <span className="block my-3 sm:my-5 text-2xl sm:text-4xl md:text-5xl italic font-serif text-amber-800/80 font-normal">
+                weds
+              </span>
+              <span className="block font-medium text-zinc-950">Unnati</span>
+            </h1>
+
+            {/* Subtle Divider & Subtitle */}
+            <div className="mt-8 sm:mt-12 flex items-center justify-center gap-3">
+              <div className="h-[1px] w-10 sm:w-16 bg-zinc-300" />
+              <span className="text-xs sm:text-sm tracking-[0.3em] uppercase text-zinc-500 font-sans font-medium">
+                Save The Date
+              </span>
+              <div className="h-[1px] w-10 sm:w-16 bg-zinc-300" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
