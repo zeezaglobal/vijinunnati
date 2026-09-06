@@ -19,6 +19,7 @@ export default function SmoothVideoScroll({
 
   const targetProgressRef = useRef(0);
   const currentProgressRef = useRef(0);
+  const currentTargetFrameRef = useRef(0);
   const rafIdRef = useRef<number | null>(null);
   const lastDrawnFrameRef = useRef<number>(-1);
 
@@ -31,6 +32,7 @@ export default function SmoothVideoScroll({
 
     const canvasWidth = canvas.width;
     const canvasHeight = canvas.height;
+    if (canvasWidth === 0 || canvasHeight === 0 || img.naturalWidth === 0 || img.naturalHeight === 0) return;
 
     // Calculate aspect-ratio cover
     const hRatio = canvasWidth / img.naturalWidth;
@@ -49,12 +51,13 @@ export default function SmoothVideoScroll({
   const renderFrame = useCallback(
     (index: number) => {
       const clamped = Math.max(0, Math.min(TOTAL_FRAMES - 1, index));
-      if (clamped === lastDrawnFrameRef.current) return;
 
       let img = imagesRef.current[clamped];
+      let actualDrawnIndex = clamped;
 
       // Fallback to nearest loaded frame
       if (!img || !img.complete || img.naturalWidth === 0) {
+        let found = false;
         for (let offset = 1; offset < TOTAL_FRAMES; offset++) {
           const prev = clamped - offset;
           if (
@@ -64,6 +67,8 @@ export default function SmoothVideoScroll({
             imagesRef.current[prev]!.naturalWidth > 0
           ) {
             img = imagesRef.current[prev];
+            actualDrawnIndex = prev;
+            found = true;
             break;
           }
           const next = clamped + offset;
@@ -74,60 +79,102 @@ export default function SmoothVideoScroll({
             imagesRef.current[next]!.naturalWidth > 0
           ) {
             img = imagesRef.current[next];
+            actualDrawnIndex = next;
+            found = true;
             break;
           }
         }
+        if (!found) return;
       }
 
       if (img && img.complete && img.naturalWidth > 0) {
+        if (actualDrawnIndex === lastDrawnFrameRef.current) return;
         drawImageCover(img);
-        lastDrawnFrameRef.current = clamped;
+        lastDrawnFrameRef.current = actualDrawnIndex;
       }
     },
     [drawImageCover, TOTAL_FRAMES]
   );
 
-  // Resize canvas according to window size and DPR for ultra-sharp Retina rendering
+  // Resize canvas according to container size and DPR for ultra-sharp Retina rendering
   const handleResize = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = window.innerWidth * dpr;
-    canvas.height = window.innerHeight * dpr;
-    canvas.style.width = `${window.innerWidth}px`;
-    canvas.style.height = `${window.innerHeight}px`;
+    const parent = canvas.parentElement;
+    const width = (parent && parent.clientWidth > 0) ? parent.clientWidth : window.innerWidth;
+    const height = (parent && parent.clientHeight > 0) ? parent.clientHeight : window.innerHeight;
+
+    if (width === 0 || height === 0) return;
+
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
 
     // Redraw current frame on resize
     if (lastDrawnFrameRef.current >= 0) {
       const lastIndex = lastDrawnFrameRef.current;
       lastDrawnFrameRef.current = -1;
       renderFrame(lastIndex);
+    } else {
+      renderFrame(0);
     }
   }, [renderFrame]);
 
-  // Preload frames progressively
+  // Preload frames progressively in small controlled batches for rapid mobile streaming
   useEffect(() => {
     imagesRef.current = new Array(TOTAL_FRAMES).fill(null);
 
-    // 1. Immediately load frame 1 for instantaneous visual feedback
+    // 1. Immediately load frame 1 for instant visual display
     const firstImg = new Image();
-    firstImg.src = getFramePath(1);
     firstImg.onload = () => {
       imagesRef.current[0] = firstImg;
       handleResize();
       renderFrame(0);
     };
-
-    // 2. Concurrently preload all remaining frames
-    for (let i = 2; i <= TOTAL_FRAMES; i++) {
-      const img = new Image();
-      img.src = getFramePath(i);
-      const frameIdx = i - 1;
-      img.onload = () => {
-        imagesRef.current[frameIdx] = img;
-      };
+    firstImg.src = getFramePath(1);
+    if (firstImg.complete && firstImg.naturalWidth > 0) {
+      imagesRef.current[0] = firstImg;
+      handleResize();
+      renderFrame(0);
     }
+
+    // 2. Preload remaining frames in batches of 8 so mobile Wi-Fi doesn't stall
+    let nextIdxToLoad = 2;
+    const BATCH_SIZE = 8;
+
+    const loadNextBatch = () => {
+      if (nextIdxToLoad > TOTAL_FRAMES) return;
+      const start = nextIdxToLoad;
+      const end = Math.min(start + BATCH_SIZE - 1, TOTAL_FRAMES);
+      nextIdxToLoad = end + 1;
+
+      for (let i = start; i <= end; i++) {
+        const img = new Image();
+        const frameIdx = i - 1;
+        img.onload = () => {
+          imagesRef.current[frameIdx] = img;
+          // If this frame matches where the user is currently scrolled, redraw immediately
+          if (Math.abs(frameIdx - currentTargetFrameRef.current) <= 2) {
+            renderFrame(currentTargetFrameRef.current);
+          }
+        };
+        img.src = getFramePath(i);
+        if (img.complete && img.naturalWidth > 0) {
+          imagesRef.current[frameIdx] = img;
+        }
+      }
+
+      // Schedule next batch swiftly
+      if (nextIdxToLoad <= TOTAL_FRAMES) {
+        setTimeout(loadNextBatch, 40);
+      }
+    };
+
+    // Begin batch preloading
+    loadNextBatch();
   }, [handleResize, renderFrame, TOTAL_FRAMES]);
 
   // Resize listener
@@ -141,19 +188,26 @@ export default function SmoothVideoScroll({
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const totalScrollableDistance = rect.height - window.innerHeight;
+      const container = containerRef.current;
+      const containerHeight = container.offsetHeight || container.clientHeight;
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+      const totalScrollableDistance = containerHeight - windowHeight;
 
       if (totalScrollableDistance <= 0) return;
 
+      const scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+      const containerTop = container.offsetTop || 0;
+      const scrolled = scrollTop - containerTop;
+
       const progress = Math.min(
-        Math.max(-rect.top / totalScrollableDistance, 0),
+        Math.max(scrolled / totalScrollableDistance, 0),
         1
       );
       targetProgressRef.current = progress;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("touchmove", handleScroll, { passive: true });
     handleScroll();
 
     // Constant parameters
@@ -163,9 +217,9 @@ export default function SmoothVideoScroll({
     const updateMotion = () => {
       const diff = targetProgressRef.current - currentProgressRef.current;
 
-      // Lerp smoothing with 0.08 damping factor
+      // Responsive lerp: fast follow on touch, smooth settle
       if (Math.abs(diff) > 0.0001) {
-        currentProgressRef.current += diff * 0.08;
+        currentProgressRef.current += diff * 0.2;
       } else {
         currentProgressRef.current = targetProgressRef.current;
       }
@@ -175,6 +229,7 @@ export default function SmoothVideoScroll({
       // 1. Scrub video: 0.0 to VIDEO_END_PROGRESS maps to frame 0 -> 144
       const videoRatio = Math.min(p / VIDEO_END_PROGRESS, 1);
       const targetFrame = Math.round(videoRatio * (TOTAL_FRAMES - 1));
+      currentTargetFrameRef.current = targetFrame;
       renderFrame(targetFrame);
 
       // 2. Reveal text: TEXT_START_PROGRESS to 1.0 maps to text opacity 0 -> 1
@@ -199,6 +254,7 @@ export default function SmoothVideoScroll({
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("touchmove", handleScroll);
       if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     };
   }, [renderFrame, TOTAL_FRAMES]);
@@ -209,7 +265,7 @@ export default function SmoothVideoScroll({
       className="relative w-full h-[380vh] bg-white text-zinc-900"
     >
       {/* Sticky Fullscreen Viewport */}
-      <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center bg-white">
+      <div className="sticky top-0 w-full h-screen h-[100dvh] overflow-hidden flex items-center justify-center bg-white">
         {/* Hardware Accelerated Canvas */}
         <canvas
           ref={canvasRef}

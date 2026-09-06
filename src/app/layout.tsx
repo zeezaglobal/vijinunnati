@@ -27,15 +27,18 @@ const alexBrush = Alex_Brush({
 export const metadata: Metadata = {
   title: "Vijin weds Unnati | Wedding Celebration",
   description: "Wedding celebration of Vijin and Unnati. Join us for Mehendi, Haldi, Vidhi, Vivaham, and Reception.",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} ${alexBrush.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} ${alexBrush.variable} antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-white text-zinc-900">{children}</body>
+      <body className="min-h-screen font-sans bg-white text-zinc-900">{children}</body>
     </html>
   );
 }

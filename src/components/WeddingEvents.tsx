@@ -1,13 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 
 interface EventDetail {
   id: string;
   tag: string;
-  title: string;
   scriptAccent: string;
+  title: string;
   date: string;
   day: string;
   time?: string;
@@ -15,8 +15,6 @@ interface EventDetail {
   venue?: string;
   dressCode?: string;
   image: string;
-  badgeColor: string;
-  accentColor: string;
 }
 
 const EVENTS: EventDetail[] = [
@@ -29,8 +27,6 @@ const EVENTS: EventDetail[] = [
     day: "Friday",
     theme: "Green Hues of Henna",
     image: "/1.jpeg",
-    badgeColor: "bg-emerald-950/60 border-emerald-500/40 text-emerald-300",
-    accentColor: "text-emerald-300",
   },
   {
     id: "haldi",
@@ -41,19 +37,15 @@ const EVENTS: EventDetail[] = [
     day: "Saturday",
     theme: "Marigold / Sunflower",
     image: "/2.jpeg",
-    badgeColor: "bg-amber-950/60 border-amber-500/40 text-amber-300",
-    accentColor: "text-amber-300",
   },
   {
     id: "ceremonies",
     tag: "The Sacred Auspicious Day",
     scriptAccent: "Two Cultures, One Sacred Bond",
-    title: "Vidhi & Vivaham",
+    title: "The Wedding Ceremonies",
     date: "22nd November",
     day: "Sunday",
     image: "/3.jpeg",
-    badgeColor: "bg-rose-950/60 border-rose-500/40 text-rose-300",
-    accentColor: "text-rose-300",
   },
   {
     id: "reception",
@@ -65,31 +57,43 @@ const EVENTS: EventDetail[] = [
     time: "5:00 PM onwards",
     dressCode: "Glow in chic western glam",
     image: "/4.jpeg",
-    badgeColor: "bg-indigo-950/60 border-indigo-500/40 text-indigo-300",
-    accentColor: "text-amber-300",
   },
 ];
 
 export default function WeddingEvents() {
+  const [attendance, setAttendance] = useState<"yes" | "no" | null>(null);
+  const [showNoPopup, setShowNoPopup] = useState(false);
+  const [runawayOffset, setRunawayOffset] = useState({ x: 0, y: 0 });
+  const [dodgeCount, setDodgeCount] = useState(0);
+
+  // RSVP Form Details
+  const [guestName, setGuestName] = useState("");
+  const [memberCount, setMemberCount] = useState<"1" | "3" | "5">("1");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const moveNoButton = () => {
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = 70 + Math.random() * 70;
+    let newX = Math.cos(angle) * distance;
+    let newY = Math.sin(angle) * distance;
+
+    newX = Math.max(-120, Math.min(120, newX));
+    newY = Math.max(-50, Math.min(50, newY));
+
+    setRunawayOffset({ x: newX, y: newY });
+    setDodgeCount((prev) => prev + 1);
+  };
+
   const googleMapsUrl =
-    "https://www.google.com/maps/search/?api=1&query=Gardenia+Convention+Center+Njekkadu";
+    "https://maps.google.com/?q=Gardenia+Convention+Center+Njekkadu";
 
   return (
-    <div id="events" className="relative w-full bg-zinc-950 text-white">
+    <div id="events" className="relative w-full bg-white text-white">
       {/* Introduction Transition Banner */}
-      <section className="relative py-28 sm:py-36 px-6 bg-gradient-to-b from-white via-stone-100 to-stone-900 text-zinc-900 text-center flex flex-col items-center justify-center overflow-hidden">
-        {/* Subtle Decorative Mandala Background */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
-          <svg className="w-[600px] h-[600px]" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            <path d="M50,5 L50,95 M5,50 L95,50 M18,18 L82,82 M18,82 L82,18" stroke="currentColor" strokeWidth="0.25" />
-          </svg>
-        </div>
-
+      <section className="relative py-28 sm:py-36 px-6 bg-white text-zinc-900 text-center flex flex-col items-center justify-center overflow-hidden">
         <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
-          <p className="font-script text-3xl sm:text-5xl text-amber-800/90 mb-2">
+          <p className="font-script text-4xl sm:text-6xl text-amber-800/90 mb-2">
             With the blessings of our elders
           </p>
           <div className="flex items-center gap-3 my-4">
@@ -107,22 +111,18 @@ export default function WeddingEvents() {
             Please grace our special moments with your presence and warm blessings.
           </p>
 
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-xs font-mono tracking-widest uppercase text-zinc-500">
-            <span className="px-4 py-2 rounded-full border border-zinc-300 bg-white/80 shadow-sm">
-              Nov 20 • Mehendi
-            </span>
-            <span className="px-4 py-2 rounded-full border border-zinc-300 bg-white/80 shadow-sm">
-              Nov 21 • Haldi
-            </span>
-            <span className="px-4 py-2 rounded-full border border-zinc-300 bg-white/80 shadow-sm">
-              Nov 22 • Wedding & Reception
-            </span>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-xs font-mono tracking-widest uppercase text-zinc-600">
+            <span>Nov 20 • Mehendi</span>
+            <span>•</span>
+            <span>Nov 21 • Haldi</span>
+            <span>•</span>
+            <span>Nov 22 • Wedding & Reception</span>
           </div>
         </div>
       </section>
 
-      {/* 1. MEHENDI (Photo 1) */}
-      <section className="relative min-h-screen w-full flex items-center justify-center py-20 px-6 overflow-hidden">
+      {/* 1. MEHENDI (Photo 1) - Text anchored at bottom */}
+      <section className="relative min-h-screen w-full flex items-end justify-center pb-16 sm:pb-24 pt-32 px-6 overflow-hidden">
         {/* Fullscreen Photo Background */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -131,67 +131,39 @@ export default function WeddingEvents() {
             fill
             priority
             sizes="100vw"
-            className="object-cover object-center scale-105 filter brightness-90"
+            className="object-cover object-center filter brightness-95"
           />
-          {/* Film Grain & Cinematic Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/95 via-stone-950/50 to-stone-950/70" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
         </div>
 
-        {/* Floating Glass Card */}
-        <div className="relative z-10 max-w-2xl w-full mx-auto p-8 sm:p-12 rounded-3xl bg-black/45 backdrop-blur-xl border border-white/20 shadow-2xl">
-          <div className="flex items-center justify-between gap-4 mb-6">
-            <span className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest bg-white/10 border border-white/20 text-emerald-300">
-              {EVENTS[0].tag}
-            </span>
-            <span className="text-xs sm:text-sm font-serif tracking-widest text-zinc-300 uppercase">
-              {EVENTS[0].day}
-            </span>
-          </div>
+        {/* Text directly on background (No Box, No Blur) */}
+        <div className="relative z-10 max-w-3xl w-full mx-auto text-center flex flex-col items-center">
+          <span className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-emerald-300 drop-shadow mb-3">
+            {EVENTS[0].day}
+          </span>
 
-          <p className="font-script text-3xl sm:text-4xl text-amber-200 font-normal mb-1">
+          <p className="font-script text-4xl sm:text-6xl text-amber-200 drop-shadow-md mb-2">
             {EVENTS[0].scriptAccent}
           </p>
 
-          <h3 className="text-4xl sm:text-6xl font-serif font-medium text-white tracking-tight mt-2 mb-6">
+          <h3 className="text-5xl sm:text-7xl md:text-8xl font-serif font-normal text-white tracking-tight drop-shadow-lg mb-6 leading-none">
             {EVENTS[0].title}
           </h3>
 
-          <div className="h-[1px] w-full bg-white/15 my-6" />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {/* Date */}
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0 text-emerald-300">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-wider font-mono text-zinc-400">Date</p>
-                <p className="text-base sm:text-lg font-serif font-medium text-white">{EVENTS[0].date}</p>
-                <p className="text-xs text-zinc-400">{EVENTS[0].day}</p>
-              </div>
-            </div>
-
-            {/* Theme */}
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0 text-emerald-300">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M7 21a4 4 0 01-4-4 5 5 0 015-5 4 4 0 014 4 4 4 0 01-5 5zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-wider font-mono text-zinc-400">Theme</p>
-                <p className="text-base sm:text-lg font-serif font-medium text-emerald-300">{EVENTS[0].theme}</p>
-                <p className="text-xs text-zinc-400">Embrace the vibrant greens</p>
-              </div>
-            </div>
+          <div className="flex flex-row flex-wrap items-center justify-center gap-x-3 gap-y-1.5 my-4">
+            <span className="font-serif text-base sm:text-2xl text-white tracking-wide drop-shadow">
+              {EVENTS[0].date}
+            </span>
+            <span className="text-white/40">•</span>
+            <span className="text-xs sm:text-base font-sans tracking-wider uppercase text-emerald-300 drop-shadow">
+              Theme: {EVENTS[0].theme}
+            </span>
           </div>
         </div>
       </section>
 
-      {/* 2. PHOOLO VALI HALDI (Photo 2) */}
-      <section className="relative min-h-screen w-full flex items-center justify-center py-20 px-6 overflow-hidden">
+      {/* 2. PHOOLO VALI HALDI (Photo 2) - Text anchored at top */}
+      <section className="relative min-h-screen w-full flex items-start justify-center pt-20 sm:pt-28 pb-32 px-6 overflow-hidden">
         {/* Fullscreen Photo Background */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -201,66 +173,37 @@ export default function WeddingEvents() {
             sizes="100vw"
             className="object-cover object-center filter brightness-95"
           />
-          {/* Warm Amber Haldi Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/95 via-stone-950/60 to-stone-950/75" />
-          <div className="absolute inset-0 bg-amber-950/30 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/95 via-black/50 to-transparent" />
         </div>
 
-        {/* Floating Glass Card */}
-        <div className="relative z-10 max-w-2xl w-full mx-auto p-8 sm:p-12 rounded-3xl bg-black/45 backdrop-blur-xl border border-amber-500/30 shadow-2xl">
-          <div className="flex items-center justify-between gap-4 mb-6">
-            <span className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest bg-white/10 border border-amber-500/40 text-amber-300">
-              {EVENTS[1].tag}
-            </span>
-            <span className="text-xs sm:text-sm font-serif tracking-widest text-zinc-300 uppercase">
-              {EVENTS[1].day}
-            </span>
-          </div>
+        {/* Text directly on background (No Box, No Blur) */}
+        <div className="relative z-10 max-w-3xl w-full mx-auto text-center flex flex-col items-center">
+          <span className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-amber-300 drop-shadow mb-3">
+            {EVENTS[1].day}
+          </span>
 
-          <p className="font-script text-3xl sm:text-4xl text-amber-300 font-normal mb-1">
+          <p className="font-script text-4xl sm:text-6xl text-amber-200 drop-shadow-md mb-2">
             {EVENTS[1].scriptAccent}
           </p>
 
-          <h3 className="text-4xl sm:text-6xl font-serif font-medium text-white tracking-tight mt-2 mb-6">
+          <h3 className="text-5xl sm:text-7xl md:text-8xl font-serif font-normal text-white tracking-tight drop-shadow-lg mb-6 leading-none">
             {EVENTS[1].title}
           </h3>
 
-          <div className="h-[1px] w-full bg-white/15 my-6" />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {/* Date */}
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0 text-amber-300">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-wider font-mono text-zinc-400">Date</p>
-                <p className="text-base sm:text-lg font-serif font-medium text-white">{EVENTS[1].date}</p>
-                <p className="text-xs text-zinc-400">{EVENTS[1].day}</p>
-              </div>
-            </div>
-
-            {/* Theme */}
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0 text-amber-300">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-wider font-mono text-zinc-400">Theme</p>
-                <p className="text-base sm:text-lg font-serif font-medium text-amber-300">{EVENTS[1].theme}</p>
-                <p className="text-xs text-zinc-400">A shower of golden blooms</p>
-              </div>
-            </div>
+          <div className="flex flex-row flex-wrap items-center justify-center gap-x-3 gap-y-1.5 my-4">
+            <span className="font-serif text-base sm:text-2xl text-white tracking-wide drop-shadow">
+              {EVENTS[1].date}
+            </span>
+            <span className="text-white/40">•</span>
+            <span className="text-xs sm:text-base font-sans tracking-wider uppercase text-amber-300 drop-shadow">
+              Theme: {EVENTS[1].theme}
+            </span>
           </div>
         </div>
       </section>
 
-      {/* 3. WEDDING DAY - VIDHI & VIVAHAM (Photo 3) */}
-      <section className="relative min-h-screen w-full flex items-center justify-center py-24 px-6 overflow-hidden">
+      {/* 3. WEDDING DAY (Photo 3) - Text anchored at bottom */}
+      <section className="relative min-h-screen w-full flex items-end justify-center pb-16 sm:pb-24 pt-32 px-6 overflow-hidden">
         {/* Fullscreen Photo Background */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -270,145 +213,45 @@ export default function WeddingEvents() {
             sizes="100vw"
             className="object-cover object-center filter brightness-90"
           />
-          {/* Regal Red / Gold Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/95 via-stone-950/65 to-stone-950/75" />
-          <div className="absolute inset-0 bg-rose-950/30 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
         </div>
 
-        {/* Content Container */}
-        <div className="relative z-10 max-w-4xl w-full mx-auto">
-          {/* Header Banner */}
-          <div className="text-center mb-10">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest bg-amber-950/70 border border-amber-500/40 text-amber-300 mb-3">
-              November 22 • Sunday
-            </span>
-            <p className="font-script text-3xl sm:text-5xl text-amber-300 font-normal">
-              Two Traditions, One Sacred Knot
-            </p>
-            <h3 className="text-4xl sm:text-6xl font-serif font-medium text-white tracking-tight mt-1">
+        {/* Clean Headline on Photo 3 */}
+        <div className="relative z-10 max-w-4xl w-full mx-auto text-center flex flex-col items-center">
+          <span className="text-xs sm:text-sm font-mono tracking-[0.35em] uppercase text-amber-300 drop-shadow block mb-3">
+            November 22 • Sunday
+          </span>
+          <p className="font-script text-4xl sm:text-6xl text-amber-200 drop-shadow-md mb-2">
+            Two Traditions, One Sacred Knot
+          </p>
+          <h3 className="text-5xl sm:text-7xl md:text-8xl font-serif font-normal text-white tracking-tight drop-shadow-lg leading-none mb-6">
+            Vidhi & Vivaham
+          </h3>
+          <div className="flex items-center justify-center gap-4 my-4">
+            <div className="h-[1px] w-12 sm:w-20 bg-white/40" />
+            <span className="font-serif text-xl sm:text-2xl text-white tracking-wide drop-shadow">
               The Wedding Ceremonies
-            </h3>
+            </span>
+            <div className="h-[1px] w-12 sm:w-20 bg-white/40" />
           </div>
 
-          {/* Two Traditional Ceremony Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            {/* Vidhi (Marathi Tradition) */}
-            <div className="p-8 rounded-3xl bg-black/55 backdrop-blur-xl border border-amber-500/30 shadow-2xl flex flex-col justify-between">
-              <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono uppercase tracking-widest bg-amber-500/10 border border-amber-500/30 text-amber-300 mb-4">
-                  Marathi Tradition
-                </div>
-                <h4 className="text-3xl sm:text-4xl font-serif font-medium text-white">
-                  Vidhi
-                </h4>
-                <p className="font-script text-2xl text-amber-200/90 mt-1 mb-6">
-                  Sacred rituals of love & devotion
-                </p>
-
-                <div className="space-y-4 text-sm">
-                  <div className="flex items-center gap-3">
-                    <span className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-amber-300">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </span>
-                    <div>
-                      <p className="text-xs font-mono uppercase text-zinc-400">Time</p>
-                      <p className="font-serif font-medium text-white text-base">7:00 AM</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <span className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-amber-300">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                    </span>
-                    <div>
-                      <p className="text-xs font-mono uppercase text-zinc-400">Dress Code</p>
-                      <p className="font-serif font-medium text-amber-200 text-base">Maharashtrian Traditional</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-white/15">
-                <a
-                  href={googleMapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-zinc-300 hover:text-white transition-colors"
-                >
-                  <svg className="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  Gardenia Convention Center, Njekkadu ↗
-                </a>
-              </div>
-            </div>
-
-            {/* Vivaham (Kerala Tradition) */}
-            <div className="p-8 rounded-3xl bg-black/55 backdrop-blur-xl border border-rose-500/30 shadow-2xl flex flex-col justify-between">
-              <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono uppercase tracking-widest bg-rose-500/10 border border-rose-500/30 text-rose-300 mb-4">
-                  Kerala Tradition
-                </div>
-                <h4 className="text-3xl sm:text-4xl font-serif font-medium text-white">
-                  Vivaham
-                </h4>
-                <p className="font-script text-2xl text-rose-200/90 mt-1 mb-6">
-                  The auspicious Muhurtham
-                </p>
-
-                <div className="space-y-4 text-sm">
-                  <div className="flex items-center gap-3">
-                    <span className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-rose-300">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </span>
-                    <div>
-                      <p className="text-xs font-mono uppercase text-zinc-400">Muhurtham Time</p>
-                      <p className="font-serif font-medium text-white text-base">11:50 AM – 12:20 PM</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <span className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-rose-300">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                    </span>
-                    <div>
-                      <p className="text-xs font-mono uppercase text-zinc-400">Dress Code</p>
-                      <p className="font-serif font-medium text-rose-200 text-base">Kerala Traditional</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-white/15">
-                <a
-                  href={googleMapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-zinc-300 hover:text-white transition-colors"
-                >
-                  <svg className="w-4 h-4 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  Gardenia Convention Center, Njekkadu ↗
-                </a>
-              </div>
-            </div>
-          </div>
+          <a
+            href={googleMapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-400/40 bg-black/40 backdrop-blur-md text-xs sm:text-sm font-sans tracking-wider uppercase text-amber-200 hover:text-white hover:bg-black/60 transition-all pointer-events-auto cursor-pointer drop-shadow shadow-lg"
+          >
+            <svg className="w-4 h-4 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>Gardenia Convention Center, Njekkadu ↗</span>
+          </a>
         </div>
       </section>
 
-      {/* 4. RECEPTION (Photo 4) */}
-      <section className="relative min-h-screen w-full flex items-center justify-center py-20 px-6 overflow-hidden">
+      {/* 4. RECEPTION (Photo 4) - Text anchored at top */}
+      <section className="relative min-h-screen w-full flex items-start justify-center pt-20 sm:pt-28 pb-32 px-6 overflow-hidden">
         {/* Fullscreen Photo Background */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -418,72 +261,380 @@ export default function WeddingEvents() {
             sizes="100vw"
             className="object-cover object-center filter brightness-95"
           />
-          {/* Midnight Glam Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/95 via-stone-950/60 to-stone-950/75" />
-          <div className="absolute inset-0 bg-indigo-950/30 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/95 via-black/50 to-transparent" />
         </div>
 
-        {/* Floating Glass Card */}
-        <div className="relative z-10 max-w-2xl w-full mx-auto p-8 sm:p-12 rounded-3xl bg-black/50 backdrop-blur-xl border border-indigo-400/30 shadow-2xl">
-          <div className="flex items-center justify-between gap-4 mb-6">
-            <span className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest bg-white/10 border border-indigo-400/40 text-indigo-300">
-              {EVENTS[3].tag}
+        {/* Text directly on background (No Box, No Blur) */}
+        <div className="relative z-10 max-w-3xl w-full mx-auto text-center flex flex-col items-center">
+          <div className="flex flex-row items-center justify-center gap-2 sm:gap-2.5 mb-3">
+            <span className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-amber-300 drop-shadow">
+              {EVENTS[3].date}
             </span>
-            <span className="text-xs sm:text-sm font-serif tracking-widest text-zinc-300 uppercase">
+            <span className="text-white/40 text-xs">•</span>
+            <span className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-indigo-300 drop-shadow">
               {EVENTS[3].day}
             </span>
           </div>
 
-          <p className="font-script text-3xl sm:text-4xl text-amber-300 font-normal mb-1">
+          <p className="font-script text-[1.7rem] sm:text-5xl md:text-6xl text-amber-200 drop-shadow-md mb-2 whitespace-nowrap">
             {EVENTS[3].scriptAccent}
           </p>
 
-          <h3 className="text-4xl sm:text-6xl font-serif font-medium text-white tracking-tight mt-2 mb-6">
+          <h3 className="text-3xl sm:text-5xl md:text-6xl font-serif font-normal text-white tracking-tight drop-shadow-lg mb-4 leading-tight">
             {EVENTS[3].title}
           </h3>
 
-          <div className="h-[1px] w-full bg-white/15 my-6" />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {/* Date & Time */}
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0 text-amber-300">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-wider font-mono text-zinc-400">Date & Time</p>
-                <p className="text-base sm:text-lg font-serif font-medium text-white">{EVENTS[3].date}</p>
-                <p className="text-xs text-amber-300 font-medium">{EVENTS[3].time}</p>
-              </div>
-            </div>
-
-            {/* Dress Code */}
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0 text-amber-300">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-wider font-mono text-zinc-400">Dress Code</p>
-                <p className="text-base sm:text-lg font-serif font-medium text-amber-200">
-                  {EVENTS[3].dressCode}
-                </p>
-                <p className="text-xs text-zinc-400">Evening of glamorous celebration</p>
-              </div>
-            </div>
+          <div className="flex flex-row flex-wrap items-center justify-center gap-x-3 gap-y-1.5 my-4">
+            <span className="font-serif text-sm sm:text-2xl text-white tracking-wide drop-shadow">
+              {EVENTS[3].time}
+            </span>
+            <span className="text-white/40">•</span>
+            <span className="text-xs sm:text-base font-sans tracking-wider uppercase text-amber-200 drop-shadow">
+              Dress Code: {EVENTS[3].dressCode}
+            </span>
           </div>
         </div>
       </section>
 
-      {/* Footer Ending with Love */}
-      <footer className="py-20 px-6 bg-stone-950 border-t border-white/10 text-center flex flex-col items-center justify-center">
-        <p className="font-script text-4xl sm:text-5xl text-amber-300 mb-2">
+      {/* 5. FOOTER PAGE - Detailed Ceremonies & Love Note */}
+      <footer className="py-24 sm:py-32 px-6 bg-stone-950 border-t border-white/10 text-center flex flex-col items-center justify-center">
+        {/* Wedding Ceremonies Details moved here */}
+        <div className="max-w-5xl w-full mx-auto mb-20">
+          <div className="text-center mb-12 sm:mb-16">
+            <span className="text-xs sm:text-sm font-mono tracking-[0.35em] uppercase text-amber-300 block mb-3">
+              November 22 • Sunday
+            </span>
+            <p className="font-script text-4xl sm:text-6xl text-amber-200 mb-2">
+              Two Traditions, One Sacred Knot
+            </p>
+            <h3 className="text-4xl sm:text-6xl md:text-7xl font-serif font-normal text-white tracking-tight leading-none">
+              Ceremony Schedule & Details
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-16 w-full max-w-4xl mx-auto text-center">
+            {/* Vidhi (Marathi Tradition) */}
+            <div className="flex flex-col items-center">
+              <span className="text-xs font-mono uppercase tracking-[0.3em] text-amber-300 mb-2">
+                Marathi Tradition
+              </span>
+              <h4 className="text-4xl sm:text-5xl font-serif font-normal text-white mb-2">
+                Vidhi
+              </h4>
+              <p className="font-script text-2xl sm:text-3xl text-amber-200/90 mb-6">
+                Sacred rituals of love & devotion
+              </p>
+
+              <div className="flex flex-row items-center justify-center gap-6 sm:gap-10 font-serif text-center">
+                <div>
+                  <span className="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-zinc-400 block font-sans mb-1">
+                    Time
+                  </span>
+                  <p className="text-sm sm:text-lg text-white font-medium">7:00 AM</p>
+                </div>
+                <div className="h-8 w-[1px] bg-white/20" />
+                <div>
+                  <span className="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-zinc-400 block font-sans mb-1">
+                    Dress Code
+                  </span>
+                  <p className="text-sm sm:text-lg text-amber-200">Maharashtrian Traditional</p>
+                </div>
+              </div>
+
+              <a
+                href={googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-400/30 bg-amber-950/20 hover:bg-amber-900/40 text-xs sm:text-sm font-sans tracking-wider uppercase text-amber-200 hover:text-white transition-all cursor-pointer pointer-events-auto shadow-sm"
+              >
+                <svg className="w-4 h-4 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>Gardenia Convention Center, Njekkadu ↗</span>
+              </a>
+            </div>
+
+            {/* Vivaham (Kerala Tradition) */}
+            <div className="flex flex-col items-center">
+              <span className="text-xs font-mono uppercase tracking-[0.3em] text-rose-300 mb-2">
+                Kerala Tradition
+              </span>
+              <h4 className="text-4xl sm:text-5xl font-serif font-normal text-white mb-2">
+                Vivaham
+              </h4>
+              <p className="font-script text-2xl sm:text-3xl text-rose-200/90 mb-6">
+                The auspicious Muhurtham
+              </p>
+
+              <div className="flex flex-row items-center justify-center gap-6 sm:gap-10 font-serif text-center">
+                <div>
+                  <span className="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-zinc-400 block font-sans mb-1">
+                    Muhurtham Time
+                  </span>
+                  <p className="text-sm sm:text-lg text-white font-medium">
+                    11:50 AM – 12:20 PM
+                  </p>
+                </div>
+                <div className="h-8 w-[1px] bg-white/20" />
+                <div>
+                  <span className="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-zinc-400 block font-sans mb-1">
+                    Dress Code
+                  </span>
+                  <p className="text-sm sm:text-lg text-rose-200">Kerala Traditional</p>
+                </div>
+              </div>
+
+              <a
+                href={googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-rose-400/30 bg-rose-950/20 hover:bg-rose-900/40 text-xs sm:text-sm font-sans tracking-wider uppercase text-rose-200 hover:text-white transition-all cursor-pointer pointer-events-auto shadow-sm"
+              >
+                <svg className="w-4 h-4 text-rose-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>Gardenia Convention Center, Njekkadu ↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* RSVP Attendance Section */}
+        <div
+          id="rsvp-card"
+          className="w-full max-w-xl mx-auto my-10 p-6 sm:p-10 rounded-2xl sm:rounded-3xl border border-amber-400/20 bg-stone-900/40 backdrop-blur-md text-center shadow-2xl"
+        >
+          <span className="text-xs font-mono tracking-[0.35em] uppercase text-amber-300/80 block mb-2">
+            R.S.V.P
+          </span>
+          <h3 className="font-script text-4xl sm:text-6xl text-amber-200 mb-3">
+            Will You Grace Us With Your Presence?
+          </h3>
+          <p className="text-xs sm:text-sm text-zinc-300 font-light mb-8 max-w-md mx-auto leading-relaxed">
+            Your love and blessings mean the world to us as we unite two hearts and two families. Please let us know if you can join our celebration.
+          </p>
+
+          {attendance === null ? (
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setAttendance("yes");
+                  setIsSubmitted(false);
+                }}
+                className="w-full sm:w-auto px-8 py-3.5 rounded-full border border-amber-400/60 bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/35 hover:to-amber-600/35 text-amber-200 hover:text-white text-xs sm:text-sm font-sans tracking-widest uppercase font-medium transition-all shadow-lg hover:shadow-amber-500/10 cursor-pointer flex items-center justify-center gap-2.5 active:scale-95"
+              >
+                <span>✨</span>
+                <span>Yes, Joyfully Accepts</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowNoPopup(true);
+                  setRunawayOffset({ x: 0, y: 0 });
+                  setDodgeCount(0);
+                }}
+                className="w-full sm:w-auto px-8 py-3.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-zinc-200 text-xs sm:text-sm font-sans tracking-widest uppercase transition-all cursor-pointer flex items-center justify-center gap-2.5 active:scale-95"
+              >
+                <span>🕊️</span>
+                <span>Regretfully Declines</span>
+              </button>
+            </div>
+          ) : attendance === "yes" ? (
+            !isSubmitted ? (
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  if (!guestName.trim() || isSubmitting) return;
+
+                  setIsSubmitting(true);
+                  try {
+                    await fetch("/api/rsvp", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        name: guestName.trim(),
+                        members: memberCount,
+                        attendance: "Joyfully Attending",
+                      }),
+                    });
+                  } catch (err) {
+                    console.error("Failed to save RSVP:", err);
+                  } finally {
+                    setIsSubmitting(false);
+                    setIsSubmitted(true);
+                  }
+                }}
+                className="py-2 w-full max-w-sm mx-auto flex flex-col items-center animate-fade-in"
+              >
+                <div className="w-12 h-12 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-xl mb-3 shadow-inner">
+                  ✨
+                </div>
+                <h4 className="font-serif text-2xl text-amber-200 mb-1">
+                  Joyfully Attending!
+                </h4>
+                <p className="text-xs text-zinc-300 font-light mb-6">
+                  Please let us know your name and how many members will be attending.
+                </p>
+
+                {/* Name Input */}
+                <div className="w-full text-left mb-4">
+                  <label
+                    htmlFor="guestName"
+                    className="block text-[11px] font-mono tracking-wider uppercase text-zinc-400 mb-1.5"
+                  >
+                    Your Name / Family Name
+                  </label>
+                  <input
+                    id="guestName"
+                    type="text"
+                    required
+                    placeholder="Enter your name"
+                    value={guestName}
+                    onChange={(e) => setGuestName(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-white/20 bg-stone-950 text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-amber-400/80 transition-colors"
+                  />
+                </div>
+
+                {/* Number of Members Choose Box (1, 3, 5 options) */}
+                <div className="w-full text-left mb-6">
+                  <label
+                    htmlFor="memberCount"
+                    className="block text-[11px] font-mono tracking-wider uppercase text-zinc-400 mb-1.5"
+                  >
+                    How Many Members Appearing?
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="memberCount"
+                      value={memberCount}
+                      onChange={(e) =>
+                        setMemberCount(e.target.value as "1" | "3" | "5")
+                      }
+                      className="w-full px-4 py-2.5 rounded-xl border border-white/20 bg-stone-950 text-white text-sm focus:outline-none focus:border-amber-400/80 transition-colors appearance-none cursor-pointer pr-10"
+                    >
+                      <option value="1" className="bg-stone-900 text-white">
+                        1 Member
+                      </option>
+                      <option value="3" className="bg-stone-900 text-white">
+                        3 Members
+                      </option>
+                      <option value="5" className="bg-stone-900 text-white">
+                        5 Members
+                      </option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400">
+                      <svg
+                        className="w-4 h-4 fill-current"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* 1, 3, 5 Quick Selection Pills */}
+                  <div className="grid grid-cols-3 gap-2 mt-2.5">
+                    {(["1", "3", "5"] as const).map((count) => (
+                      <button
+                        key={count}
+                        type="button"
+                        onClick={() => setMemberCount(count)}
+                        className={`py-1.5 px-3 rounded-lg text-xs font-mono uppercase tracking-wider transition-all cursor-pointer border ${
+                          memberCount === count
+                            ? "border-amber-400/80 bg-amber-500/20 text-amber-200 font-semibold shadow-sm"
+                            : "border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10"
+                        }`}
+                      >
+                        {count} {count === "1" ? "Member" : "Members"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full py-3 px-6 rounded-full border border-amber-400/80 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-bold text-xs sm:text-sm font-sans tracking-widest uppercase transition-all shadow-lg hover:shadow-amber-500/25 active:scale-95 cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-stone-950 border-t-transparent rounded-full animate-spin" />
+                      <span>Saving to RSVP...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>✨</span>
+                      <span>Confirm Attendance</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAttendance(null);
+                    setIsSubmitted(false);
+                  }}
+                  className="mt-4 text-[11px] font-mono tracking-wider uppercase text-zinc-500 hover:text-zinc-300 underline underline-offset-4 cursor-pointer"
+                >
+                  Cancel
+                </button>
+              </form>
+            ) : (
+              <div className="py-3 flex flex-col items-center animate-fade-in">
+                <div className="w-12 h-12 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-xl mb-3 shadow-inner">
+                  ✨
+                </div>
+                <h4 className="font-serif text-xl sm:text-2xl text-amber-200 mb-1">
+                  Attendance Confirmed!
+                </h4>
+                <p className="text-xs sm:text-sm text-zinc-300 max-w-sm mb-2 leading-relaxed">
+                  Thank you, <span className="text-white font-medium">{guestName || "Dear Guest"}</span>! We are overjoyed to welcome you and your party of <span className="text-amber-300 font-semibold">{memberCount} {memberCount === "1" ? "member" : "members"}</span> to celebrate our special day!
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsSubmitted(false);
+                  }}
+                  className="mt-4 text-[11px] font-mono tracking-wider uppercase text-zinc-400 hover:text-amber-200 underline underline-offset-4 cursor-pointer"
+                >
+                  Edit Details / Change Response
+                </button>
+              </div>
+            )
+          ) : (
+            <div className="py-3 flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-xl mb-3 shadow-inner">
+                🕊️
+              </div>
+              <h4 className="font-serif text-xl sm:text-2xl text-zinc-200 mb-1">
+                Celebrating From Afar
+              </h4>
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-sm mb-4 leading-relaxed">
+                You will be dearly missed, but we will feel your warm wishes and blessings in our hearts.
+              </p>
+              <button
+                type="button"
+                onClick={() => setAttendance(null)}
+                className="text-[11px] font-mono tracking-wider uppercase text-zinc-400 hover:text-amber-200 underline underline-offset-4 cursor-pointer"
+              >
+                Change Response
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Divider */}
+        <div className="h-[1px] w-24 bg-white/20 my-10" />
+
+        <p className="font-script text-4xl sm:text-6xl text-amber-300 mb-2">
           Vijin & Unnati
         </p>
-        <p className="text-xs font-mono uppercase tracking-[0.4em] text-zinc-500 mt-2">
+        <p className="text-xs font-mono uppercase tracking-[0.4em] text-zinc-400 mt-2">
           November 2026 • We Can’t Wait To Celebrate With You
         </p>
         <div className="mt-8">
@@ -496,6 +647,125 @@ export default function WeddingEvents() {
           </a>
         </div>
       </footer>
+
+      {/* Crying Easter Egg Popup when clicking "No" */}
+      {showNoPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
+          <div className="relative max-w-md w-full bg-gradient-to-b from-stone-900 via-stone-900 to-stone-950 border border-amber-500/30 rounded-3xl p-6 sm:p-8 text-center shadow-2xl overflow-hidden flex flex-col items-center">
+            {/* Close 'X' button */}
+            <button
+              type="button"
+              onClick={() => setShowNoPopup(false)}
+              className="absolute top-4 right-4 text-zinc-400 hover:text-white p-2 text-lg leading-none transition-colors cursor-pointer"
+              aria-label="Close popup"
+            >
+              ✕
+            </button>
+
+            {/* Crying Face Animation */}
+            <div className="relative inline-flex items-center justify-center my-3 select-none">
+              <div className="text-7xl sm:text-8xl animate-bounce">
+                😭
+              </div>
+              {/* Flying Tears */}
+              <span className="absolute -left-6 top-6 text-3xl animate-ping opacity-80">
+                💧
+              </span>
+              <span
+                className="absolute -right-6 top-6 text-3xl animate-ping opacity-80"
+                style={{ animationDelay: "200ms" }}
+              >
+                💧
+              </span>
+              <span
+                className="absolute -left-3 top-14 text-2xl animate-pulse opacity-90"
+                style={{ animationDelay: "400ms" }}
+              >
+                💦
+              </span>
+              <span
+                className="absolute -right-3 top-14 text-2xl animate-pulse opacity-90"
+                style={{ animationDelay: "600ms" }}
+              >
+                💦
+              </span>
+            </div>
+
+            {/* Header Text */}
+            <h3 className="font-script text-4xl sm:text-5xl text-amber-200 mb-2">
+              Please Come! 🥺💔
+            </h3>
+            <p className="text-xs sm:text-sm text-zinc-300 font-light mb-3 max-w-xs leading-relaxed">
+              Vijin &amp; Unnati will be heartbroken without you! We really, really want you there with us to celebrate!
+            </p>
+
+            {/* Playful hint / dodge message */}
+            {dodgeCount > 0 && (
+              <p className="text-xs font-mono text-amber-300/90 mb-3 animate-pulse">
+                {dodgeCount === 1 && "Oops, the button ran away! 🏃💨"}
+                {dodgeCount === 2 && "Still running! You can't catch it! 🙈"}
+                {dodgeCount >= 3 &&
+                  dodgeCount < 6 &&
+                  `Dodged you ${dodgeCount} times! Just say yes! 🥹`}
+                {dodgeCount >= 6 && "The button strictly refuses to say no! ❤️"}
+              </p>
+            )}
+
+            {/* Action Buttons: Yes is prominent, No runs away */}
+            <div className="w-full flex flex-col items-center gap-3 mt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setAttendance("yes");
+                  setIsSubmitted(false);
+                  setShowNoPopup(false);
+                  const rsvpElem = document.getElementById("rsvp-card");
+                  if (rsvpElem) {
+                    rsvpElem.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                className="w-full py-3.5 px-6 rounded-full border border-amber-400 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-bold text-sm sm:text-base font-sans tracking-wider uppercase transition-all shadow-lg hover:shadow-amber-500/25 hover:scale-[1.02] active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>✨</span>
+                <span>Okay, I&#39;ll Come!</span>
+                <span>❤️</span>
+              </button>
+
+              {/* Running No Button Arena */}
+              <div className="relative h-20 w-full flex items-center justify-center overflow-visible">
+                <button
+                  type="button"
+                  onMouseEnter={moveNoButton}
+                  onTouchStart={moveNoButton}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    moveNoButton();
+                  }}
+                  style={{
+                    transform: `translate(${runawayOffset.x}px, ${runawayOffset.y}px)`,
+                    transition: "transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                  }}
+                  className="px-6 py-2 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 text-zinc-400 text-xs font-sans tracking-wider uppercase cursor-pointer select-none whitespace-nowrap active:scale-90"
+                >
+                  No 😢
+                </button>
+              </div>
+            </div>
+
+            {/* Discreet escape hatch for guests who truly cannot make it */}
+            <button
+              type="button"
+              onClick={() => {
+                setAttendance("no");
+                setShowNoPopup(false);
+              }}
+              className="text-[11px] font-mono tracking-wider uppercase text-zinc-500 hover:text-zinc-300 underline underline-offset-4 cursor-pointer mt-1"
+            >
+              I really, truly cannot make it (Decline)
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
