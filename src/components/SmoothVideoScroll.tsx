@@ -249,6 +249,15 @@ export default function SmoothVideoScroll({
               </span>
               <div className="h-[1px] w-10 sm:w-16 bg-zinc-300" />
             </div>
+
+            {/* Scroll Indicator to Celebrations */}
+            <a
+              href="#events"
+              className="mt-6 sm:mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-800/20 bg-amber-50/50 text-xs font-mono tracking-widest uppercase text-amber-900/80 hover:bg-amber-100/60 transition-all pointer-events-auto cursor-pointer shadow-sm"
+            >
+              <span>Celebration Itinerary</span>
+              <span className="animate-bounce">↓</span>
+            </a>
           </div>
         </div>
       </div>
