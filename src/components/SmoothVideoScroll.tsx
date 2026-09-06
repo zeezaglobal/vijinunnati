@@ -2,11 +2,16 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 
-const TOTAL_FRAMES = 240;
+const DEFAULT_TOTAL_FRAMES = 145;
 const getFramePath = (index: number) =>
   `/frames/frame_${String(index).padStart(4, "0")}.jpg`;
 
-export default function SmoothVideoScroll() {
+export default function SmoothVideoScroll({
+  totalFrames = DEFAULT_TOTAL_FRAMES,
+}: {
+  totalFrames?: number;
+}) {
+  const TOTAL_FRAMES = totalFrames;
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imagesRef = useRef<(HTMLImageElement | null)[]>([]);
@@ -79,7 +84,7 @@ export default function SmoothVideoScroll() {
         lastDrawnFrameRef.current = clamped;
       }
     },
-    [drawImageCover]
+    [drawImageCover, TOTAL_FRAMES]
   );
 
   // Resize canvas according to window size and DPR for ultra-sharp Retina rendering
@@ -129,7 +134,7 @@ export default function SmoothVideoScroll() {
         setLoadedCount(loaded);
       };
     }
-  }, [handleResize, renderFrame]);
+  }, [handleResize, renderFrame, TOTAL_FRAMES]);
 
   // Resize listener
   useEffect(() => {
@@ -184,7 +189,7 @@ export default function SmoothVideoScroll() {
       window.removeEventListener("scroll", handleScroll);
       if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     };
-  }, [renderFrame]);
+  }, [renderFrame, TOTAL_FRAMES]);
 
   // Helper to scroll smoothly past the video to the main content
   const scrollToContent = () => {
