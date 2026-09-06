@@ -25,8 +25,35 @@ const alexBrush = Alex_Brush({
 });
 
 export const metadata: Metadata = {
-  title: "Vijin weds Unnati | Wedding Celebration",
-  description: "Wedding celebration of Vijin and Unnati. Join us for Mehendi, Haldi, Vidhi, Vivaham, and Reception.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://vijinunnati.vercel.app"
+  ),
+  title: "Vijin weds Unnati",
+  description:
+    "Wedding celebration of Vijin and Unnati • November 20–22, 2026. Join us for Mehendi, Haldi, Vivaham, and Reception.",
+  openGraph: {
+    title: "Vijin weds Unnati",
+    description:
+      "Wedding celebration of Vijin and Unnati • November 20–22, 2026. Join us for Mehendi, Haldi, Vivaham, and Reception.",
+    siteName: "Vijin weds Unnati",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Vijin weds Unnati",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vijin weds Unnati",
+    description:
+      "Wedding celebration of Vijin and Unnati • November 20–22, 2026. Join us for Mehendi, Haldi, Vivaham, and Reception.",
+    images: ["/og-image.jpg"],
+  },
   icons: {
     icon: "/icon.svg",
   },
