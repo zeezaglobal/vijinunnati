@@ -134,15 +134,13 @@ export default function WeddingEvents() {
             className="object-cover object-center scale-105 filter brightness-90"
           />
           {/* Film Grain & Cinematic Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/95 via-stone-950/60 to-stone-950/75" />
-          <div className="absolute inset-0 bg-emerald-950/30 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/95 via-stone-950/50 to-stone-950/70" />
         </div>
 
         {/* Floating Glass Card */}
         <div className="relative z-10 max-w-2xl w-full mx-auto p-8 sm:p-12 rounded-3xl bg-black/45 backdrop-blur-xl border border-white/20 shadow-2xl">
           <div className="flex items-center justify-between gap-4 mb-6">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest bg-emerald-950/70 border border-emerald-500/40 text-emerald-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+            <span className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest bg-white/10 border border-white/20 text-emerald-300">
               {EVENTS[0].tag}
             </span>
             <span className="text-xs sm:text-sm font-serif tracking-widest text-zinc-300 uppercase">
@@ -150,7 +148,7 @@ export default function WeddingEvents() {
             </span>
           </div>
 
-          <p className="font-script text-3xl sm:text-4xl text-emerald-300 font-normal mb-1">
+          <p className="font-script text-3xl sm:text-4xl text-amber-200 font-normal mb-1">
             {EVENTS[0].scriptAccent}
           </p>
 
@@ -211,8 +209,7 @@ export default function WeddingEvents() {
         {/* Floating Glass Card */}
         <div className="relative z-10 max-w-2xl w-full mx-auto p-8 sm:p-12 rounded-3xl bg-black/45 backdrop-blur-xl border border-amber-500/30 shadow-2xl">
           <div className="flex items-center justify-between gap-4 mb-6">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest bg-amber-950/70 border border-amber-500/40 text-amber-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
+            <span className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest bg-white/10 border border-amber-500/40 text-amber-300">
               {EVENTS[1].tag}
             </span>
             <span className="text-xs sm:text-sm font-serif tracking-widest text-zinc-300 uppercase">
@@ -429,8 +426,7 @@ export default function WeddingEvents() {
         {/* Floating Glass Card */}
         <div className="relative z-10 max-w-2xl w-full mx-auto p-8 sm:p-12 rounded-3xl bg-black/50 backdrop-blur-xl border border-indigo-400/30 shadow-2xl">
           <div className="flex items-center justify-between gap-4 mb-6">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest bg-indigo-950/70 border border-indigo-500/40 text-indigo-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-ping" />
+            <span className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest bg-white/10 border border-indigo-400/40 text-indigo-300">
               {EVENTS[3].tag}
             </span>
             <span className="text-xs sm:text-sm font-serif tracking-widest text-zinc-300 uppercase">
