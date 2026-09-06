@@ -343,30 +343,14 @@ export default function SmoothVideoScroll({
           </button>
         </div>
 
-        {/* Bottom Status Bar with Preload & Scroll Progress */}
-        <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between z-20 pointer-events-none">
-          {/* Scroll Progress Bar */}
-          <div className="flex items-center gap-3">
-            <div className="w-28 md:w-44 h-1 bg-white/20 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-emerald-400 transition-all duration-75 ease-out"
-                style={{ width: `${scrollProgress * 100}%` }}
-              />
-            </div>
-            <span className="text-[11px] font-mono text-zinc-400">
-              {Math.round(scrollProgress * 100)}%
-            </span>
-          </div>
-
-          {/* Preload status pill (fades away when 100% loaded) */}
-          <div
-            className={`transition-opacity duration-700 ${
-              progressPercent >= 100 ? "opacity-0" : "opacity-100"
-            }`}
-          >
-            <div className="px-3 py-1 rounded-full bg-black/60 border border-white/10 text-[11px] font-mono text-zinc-400 backdrop-blur-md">
-              Caching assets: {progressPercent}%
-            </div>
+        {/* Preload status pill (fades away when 100% loaded) */}
+        <div
+          className={`absolute bottom-6 right-6 z-20 pointer-events-none transition-opacity duration-700 ${
+            progressPercent >= 100 ? "opacity-0" : "opacity-100"
+          }`}
+        >
+          <div className="px-3 py-1 rounded-full bg-black/60 border border-white/10 text-[11px] font-mono text-zinc-400 backdrop-blur-md">
+            Caching assets: {progressPercent}%
           </div>
         </div>
       </div>
