@@ -232,13 +232,13 @@ export default function SmoothVideoScroll({
               <div className="h-[1px] w-12 sm:w-20 bg-amber-700/30" />
             </div>
 
-            {/* Main Names: Vijin weds Unnati */}
-            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-serif text-zinc-900 tracking-tight font-normal leading-none">
-              <span className="block font-medium text-zinc-950">Vijin</span>
-              <span className="block my-3 sm:my-5 text-2xl sm:text-4xl md:text-5xl italic font-serif text-amber-800/80 font-normal">
+            {/* Main Names: Vijin weds Unnati in romantic wedding script */}
+            <h1 className="font-script text-6xl sm:text-8xl md:text-9xl lg:text-[10rem] text-zinc-900 tracking-normal font-normal leading-tight">
+              <span className="block text-zinc-950">Vijin</span>
+              <span className="block my-1 sm:my-3 text-3xl sm:text-5xl md:text-6xl text-amber-800/85 font-normal">
                 weds
               </span>
-              <span className="block font-medium text-zinc-950">Unnati</span>
+              <span className="block text-zinc-950">Unnati</span>
             </h1>
 
             {/* Subtle Divider & Subtitle */}
