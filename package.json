@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "extract-frames": "mkdir -p public/frames && ffmpeg -i public/intro.mp4 -q:v 3 -y public/frames/frame_%04d.jpg"
+    "extract-frames": "mkdir -p public/frames && ffmpeg -i public/intro.mp4 -q:v 1 -y public/frames/frame_%04d.jpg"
   },
   "dependencies": {
     "next": "16.3.4",
