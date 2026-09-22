@@ -26,7 +26,7 @@ const EVENTS: EventDetail[] = [
     date: "20th November",
     day: "Friday",
     theme: "Green Hues of Henna",
-    image: "/1.jpeg",
+    image: "/1.PNG",
   },
   {
     id: "haldi",
@@ -36,7 +36,7 @@ const EVENTS: EventDetail[] = [
     date: "21st November",
     day: "Saturday",
     theme: "Marigold / Sunflower",
-    image: "/2.jpeg",
+    image: "/2.PNG",
   },
   {
     id: "ceremonies",
@@ -45,7 +45,7 @@ const EVENTS: EventDetail[] = [
     title: "The Wedding Ceremonies",
     date: "22nd November",
     day: "Sunday",
-    image: "/3.jpeg",
+    image: "/3.PNG",
   },
   {
     id: "reception",
@@ -56,7 +56,7 @@ const EVENTS: EventDetail[] = [
     day: "Sunday",
     time: "5:00 PM onwards",
     dressCode: "Glow in chic western glam",
-    image: "/4.jpeg",
+    image: "/4.PNG",
   },
 ];
 
@@ -121,127 +121,124 @@ export default function WeddingEvents() {
         </div>
       </section>
 
-      {/* 1. MEHENDI (Photo 1) - Text anchored at bottom */}
-      <section className="relative min-h-screen w-full flex items-end justify-center pb-16 sm:pb-24 pt-32 px-6 overflow-hidden">
+      {/* 1. MEHENDI (Photo 1) - Clean background with dark text */}
+      <section className="relative min-h-screen w-full flex items-center justify-center py-24 px-6 overflow-hidden">
         {/* Fullscreen Photo Background */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/1.jpeg"
+            src="/1.PNG"
             alt="Vijin and Unnati - Mehendi"
             fill
             priority
             sizes="100vw"
             className="object-cover object-center filter brightness-95"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
         </div>
 
-        {/* Text directly on background (No Box, No Blur) */}
+        {/* Text centered in middle with rich dark colors */}
         <div className="relative z-10 max-w-3xl w-full mx-auto text-center flex flex-col items-center">
-          <span className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-emerald-300 drop-shadow mb-3">
+          <span className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-emerald-950 font-bold drop-shadow-sm mb-2">
             {EVENTS[0].day}
           </span>
 
-          <p className="font-script text-4xl sm:text-6xl text-amber-200 drop-shadow-md mb-2">
+          <p className="font-script text-4xl sm:text-6xl text-amber-950 drop-shadow-sm mb-1 font-medium">
             {EVENTS[0].scriptAccent}
           </p>
 
-          <h3 className="text-5xl sm:text-7xl md:text-8xl font-serif font-normal text-white tracking-tight drop-shadow-lg mb-6 leading-none">
+          <h3 className="text-5xl sm:text-7xl md:text-8xl font-serif font-normal text-zinc-950 tracking-tight drop-shadow-sm mb-4 leading-none">
             {EVENTS[0].title}
           </h3>
 
-          <div className="flex flex-row flex-wrap items-center justify-center gap-x-3 gap-y-1.5 my-4">
-            <span className="font-serif text-base sm:text-2xl text-white tracking-wide drop-shadow">
+          <div className="flex flex-row flex-wrap items-center justify-center gap-x-3 gap-y-1.5 my-2">
+            <span className="font-serif text-base sm:text-2xl text-zinc-900 tracking-wide font-medium">
               {EVENTS[0].date}
             </span>
-            <span className="text-white/40">•</span>
-            <span className="text-xs sm:text-base font-sans tracking-wider uppercase text-emerald-300 drop-shadow">
+            <span className="text-zinc-700/60">•</span>
+            <span className="text-xs sm:text-base font-sans tracking-wider uppercase text-emerald-950 font-semibold">
               Theme: {EVENTS[0].theme}
             </span>
           </div>
         </div>
       </section>
 
-      {/* 2. PHOOLO VALI HALDI (Photo 2) - Text anchored at top */}
-      <section className="relative min-h-screen w-full flex items-start justify-center pt-20 sm:pt-28 pb-32 px-6 overflow-hidden">
+      {/* 2. PHOOLO VALI HALDI - Clean background with dark text centered in middle */}
+      <section className="relative min-h-screen w-full flex items-center justify-center py-24 px-6 overflow-hidden">
         {/* Fullscreen Photo Background */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/2.jpeg"
+            src="/3.PNG"
             alt="Vijin and Unnati - Haldi"
             fill
             sizes="100vw"
             className="object-cover object-center filter brightness-95"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/95 via-black/50 to-transparent" />
         </div>
 
-        {/* Text directly on background (No Box, No Blur) */}
+        {/* Text centered in middle with rich dark colors */}
         <div className="relative z-10 max-w-3xl w-full mx-auto text-center flex flex-col items-center">
-          <span className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-amber-300 drop-shadow mb-3">
+          <span className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-amber-950 font-bold drop-shadow-sm mb-2">
             {EVENTS[1].day}
           </span>
 
-          <p className="font-script text-4xl sm:text-6xl text-amber-200 drop-shadow-md mb-2">
+          <p className="font-script text-4xl sm:text-6xl text-amber-900 drop-shadow-sm mb-1 font-medium">
             {EVENTS[1].scriptAccent}
           </p>
 
-          <h3 className="text-5xl sm:text-7xl md:text-8xl font-serif font-normal text-white tracking-tight drop-shadow-lg mb-6 leading-none">
+          <h3 className="text-5xl sm:text-7xl md:text-8xl font-serif font-normal text-zinc-950 tracking-tight drop-shadow-sm mb-4 leading-none">
             {EVENTS[1].title}
           </h3>
 
-          <div className="flex flex-row flex-wrap items-center justify-center gap-x-3 gap-y-1.5 my-4">
-            <span className="font-serif text-base sm:text-2xl text-white tracking-wide drop-shadow">
+          <div className="flex flex-row flex-wrap items-center justify-center gap-x-3 gap-y-1.5 my-2">
+            <span className="font-serif text-base sm:text-2xl text-zinc-900 tracking-wide font-medium">
               {EVENTS[1].date}
             </span>
-            <span className="text-white/40">•</span>
-            <span className="text-xs sm:text-base font-sans tracking-wider uppercase text-amber-300 drop-shadow">
+            <span className="text-zinc-700/60">•</span>
+            <span className="text-xs sm:text-base font-sans tracking-wider uppercase text-amber-950 font-semibold">
               Theme: {EVENTS[1].theme}
             </span>
           </div>
         </div>
       </section>
 
-      {/* 3. WEDDING DAY (Photo 3) - Text anchored at bottom */}
-      <section className="relative min-h-screen w-full flex items-end justify-center pb-16 sm:pb-24 pt-32 px-6 overflow-hidden">
+      {/* 3. WEDDING DAY (Photo 2) - Clean background with dark text centered in middle */}
+      <section className="relative min-h-screen w-full flex items-center justify-center py-24 px-6 overflow-hidden">
         {/* Fullscreen Photo Background */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/3.jpeg"
+            src="/2.PNG"
             alt="Vijin and Unnati - Wedding Day"
             fill
             sizes="100vw"
-            className="object-cover object-center filter brightness-90"
+            className="object-cover object-center filter brightness-95"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
         </div>
 
-        {/* Clean Headline on Photo 3 */}
+        {/* Headline on Photo 2 with rich dark colors */}
         <div className="relative z-10 max-w-4xl w-full mx-auto text-center flex flex-col items-center">
-          <span className="text-xs sm:text-sm font-mono tracking-[0.35em] uppercase text-amber-300 drop-shadow block mb-3">
+          <span className="text-xs sm:text-sm font-mono tracking-[0.35em] uppercase text-amber-950 font-bold drop-shadow-sm block mb-2">
             November 22 • Sunday
           </span>
-          <p className="font-script text-4xl sm:text-6xl text-amber-200 drop-shadow-md mb-2">
+          <p className="font-script text-4xl sm:text-6xl text-amber-900 drop-shadow-sm mb-1 font-medium">
             Two Traditions, One Sacred Knot
           </p>
-          <h3 className="text-5xl sm:text-7xl md:text-8xl font-serif font-normal text-white tracking-tight drop-shadow-lg leading-none mb-6">
+          <h3 className="text-5xl sm:text-7xl md:text-8xl font-serif font-normal text-zinc-950 tracking-tight drop-shadow-sm leading-none mb-4">
             Vidhi & Vivaham
           </h3>
-          <div className="flex items-center justify-center gap-4 my-4">
-            <div className="h-[1px] w-12 sm:w-20 bg-white/40" />
-            <span className="font-serif text-xl sm:text-2xl text-white tracking-wide drop-shadow">
+          <div className="flex items-center justify-center gap-4 my-2">
+            <div className="h-[1px] w-12 sm:w-20 bg-zinc-800/40" />
+            <span className="font-serif text-xl sm:text-2xl text-zinc-900 tracking-wide font-medium">
               The Wedding Ceremonies
             </span>
-            <div className="h-[1px] w-12 sm:w-20 bg-white/40" />
+            <div className="h-[1px] w-12 sm:w-20 bg-zinc-800/40" />
           </div>
 
           <a
             href={googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-400/40 bg-black/40 backdrop-blur-md text-xs sm:text-sm font-sans tracking-wider uppercase text-amber-200 hover:text-white hover:bg-black/60 transition-all pointer-events-auto cursor-pointer drop-shadow shadow-lg"
+            className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-900/40 bg-amber-950/10 backdrop-blur-md text-xs sm:text-sm font-sans tracking-wider uppercase text-amber-950 hover:text-zinc-950 hover:bg-amber-900/20 transition-all pointer-events-auto cursor-pointer shadow-md font-semibold"
           >
-            <svg className="w-4 h-4 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 text-amber-900 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
@@ -250,46 +247,45 @@ export default function WeddingEvents() {
         </div>
       </section>
 
-      {/* 4. RECEPTION (Photo 4) - Text anchored at top */}
-      <section className="relative min-h-screen w-full flex items-start justify-center pt-20 sm:pt-28 pb-32 px-6 overflow-hidden">
+      {/* 4. RECEPTION (Photo 4) - Text centered vertically in section */}
+      <section className="relative min-h-screen w-full flex items-center justify-center py-24 px-6 overflow-hidden">
         {/* Fullscreen Photo Background */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/4.jpeg"
+            src="/4.PNG"
             alt="Vijin and Unnati - Reception"
             fill
             sizes="100vw"
             className="object-cover object-center filter brightness-95"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/95 via-black/50 to-transparent" />
         </div>
 
-        {/* Text directly on background (No Box, No Blur) */}
+        {/* Text centered in middle with rich dark colors */}
         <div className="relative z-10 max-w-3xl w-full mx-auto text-center flex flex-col items-center">
-          <div className="flex flex-row items-center justify-center gap-2 sm:gap-2.5 mb-3">
-            <span className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-amber-300 drop-shadow">
+          <div className="flex flex-row items-center justify-center gap-2 sm:gap-2.5 mb-2">
+            <span className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-amber-950 font-bold drop-shadow-sm">
               {EVENTS[3].date}
             </span>
-            <span className="text-white/40 text-xs">•</span>
-            <span className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-indigo-300 drop-shadow">
+            <span className="text-amber-900/60 text-xs">•</span>
+            <span className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-zinc-900 font-bold drop-shadow-sm">
               {EVENTS[3].day}
             </span>
           </div>
 
-          <p className="font-script text-[1.7rem] sm:text-5xl md:text-6xl text-amber-200 drop-shadow-md mb-2 whitespace-nowrap">
+          <p className="font-script text-[1.7rem] sm:text-5xl md:text-6xl text-amber-900 drop-shadow-sm mb-1 whitespace-nowrap font-medium">
             {EVENTS[3].scriptAccent}
           </p>
 
-          <h3 className="text-3xl sm:text-5xl md:text-6xl font-serif font-normal text-white tracking-tight drop-shadow-lg mb-4 leading-tight">
+          <h3 className="text-3xl sm:text-5xl md:text-6xl font-serif font-normal text-zinc-950 tracking-tight drop-shadow-sm mb-3 leading-tight">
             {EVENTS[3].title}
           </h3>
 
-          <div className="flex flex-row flex-wrap items-center justify-center gap-x-3 gap-y-1.5 my-4">
-            <span className="font-serif text-sm sm:text-2xl text-white tracking-wide drop-shadow">
+          <div className="flex flex-row flex-wrap items-center justify-center gap-x-3 gap-y-1.5 my-2">
+            <span className="font-serif text-sm sm:text-2xl text-zinc-900 tracking-wide font-medium">
               {EVENTS[3].time}
             </span>
-            <span className="text-white/40">•</span>
-            <span className="text-xs sm:text-base font-sans tracking-wider uppercase text-amber-200 drop-shadow">
+            <span className="text-zinc-700/60">•</span>
+            <span className="text-xs sm:text-base font-sans tracking-wider uppercase text-amber-950 font-semibold">
               Dress Code: {EVENTS[3].dressCode}
             </span>
           </div>

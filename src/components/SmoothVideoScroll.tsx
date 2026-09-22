@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import NextImage from "next/image";
 
 const DEFAULT_TOTAL_FRAMES = 145;
 const getFramePath = (index: number) =>
@@ -128,7 +129,7 @@ export default function SmoothVideoScroll({
     imagesRef.current = new Array(TOTAL_FRAMES).fill(null);
 
     // 1. Immediately load frame 1 for instant visual display
-    const firstImg = new Image();
+    const firstImg = new window.Image();
     firstImg.onload = () => {
       imagesRef.current[0] = firstImg;
       handleResize();
@@ -152,7 +153,7 @@ export default function SmoothVideoScroll({
       nextIdxToLoad = end + 1;
 
       for (let i = start; i <= end; i++) {
-        const img = new Image();
+        const img = new window.Image();
         const frameIdx = i - 1;
         img.onload = () => {
           imagesRef.current[frameIdx] = img;
@@ -241,14 +242,14 @@ export default function SmoothVideoScroll({
   return (
     <div
       onClick={handleContainerClick}
-      className={`relative w-full h-screen h-[100dvh] bg-white text-zinc-900 overflow-hidden flex items-center justify-center select-none ${
+      className={`relative w-full h-screen h-[100dvh] bg-black text-white overflow-hidden flex items-center justify-center select-none ${
         !isCompleted ? "cursor-pointer" : ""
       }`}
     >
-      {/* Hardware Accelerated Canvas */}
+      {/* Hardware Accelerated Canvas for frame video playback */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 block w-full h-full object-cover pointer-events-none"
+        className="absolute inset-0 block w-full h-full object-cover pointer-events-none z-0"
       />
 
       {/* Tap/Click to Play prompt overlay before click */}
@@ -261,48 +262,58 @@ export default function SmoothVideoScroll({
         </div>
       )}
 
-      {/* Text revealed on white background: "Vijin weds Unnati" */}
+      {/* Text Revealed Overlay with 5.PNG as background */}
       <div
         ref={textRef}
         style={{ opacity: 0, transform: "translateY(24px) scale(0.96)" }}
-        className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none z-10"
+        className="absolute inset-0 flex flex-col items-center justify-start pt-48 sm:pt-64 pb-6 px-6 pointer-events-none z-10 overflow-hidden"
       >
-        <div className="max-w-4xl flex flex-col items-center">
-          {/* Elegant Top Decorative Accent */}
-          <div className="flex items-center justify-center gap-4 mb-6 sm:mb-8">
-            <div className="h-[1px] w-12 sm:w-20 bg-amber-700/30" />
-            <span className="text-[11px] sm:text-xs tracking-[0.35em] uppercase font-sans font-medium text-amber-900/70">
+        {/* Background photo 5.PNG */}
+        <div className="absolute inset-0 z-0">
+          <NextImage
+            src="/5.PNG"
+            alt="Vijin and Unnati"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+        </div>
+
+        {/* Text fitted inside the top black space above the couple */}
+        <div className="relative z-10 max-w-xl w-full flex flex-col items-center text-center">
+          {/* Top Decorative Accent */}
+          <div className="flex items-center justify-center gap-3 mb-2 sm:mb-3">
+            <div className="h-[1px] w-8 sm:w-12 bg-amber-300/40" />
+            <span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase font-sans font-medium text-amber-300">
               Together with their families
             </span>
-            <div className="h-[1px] w-12 sm:w-20 bg-amber-700/30" />
+            <div className="h-[1px] w-8 sm:w-12 bg-amber-300/40" />
           </div>
 
-          {/* Main Names: Vijin weds Unnati in romantic wedding script */}
-          <h1 className="font-script text-6xl sm:text-8xl md:text-9xl lg:text-[10rem] text-zinc-900 tracking-normal font-normal leading-tight">
-            <span className="block text-zinc-950">Vijin</span>
-            <span className="block my-1 sm:my-3 text-3xl sm:text-5xl md:text-6xl text-amber-800/85 font-normal">
+          {/* Main Names: Vijin weds Unnati */}
+          <h1 className="font-script text-5xl sm:text-7xl md:text-8xl text-white tracking-normal font-normal leading-none">
+            <span className="inline-block text-white">Vijin</span>
+            <span className="inline-block mx-2 sm:mx-4 text-2xl sm:text-4xl text-amber-200/90 font-normal">
               weds
             </span>
-            <span className="block text-zinc-950">Unnati</span>
+            <span className="inline-block text-white">Unnati</span>
           </h1>
 
-          {/* Subtle Divider & Subtitle */}
-          <div className="mt-8 sm:mt-12 flex items-center justify-center gap-3">
-            <div className="h-[1px] w-10 sm:w-16 bg-zinc-300" />
-            <span className="text-xs sm:text-sm tracking-[0.3em] uppercase text-zinc-500 font-sans font-medium">
+          {/* Subtitle & Scroll Button fitted cleanly */}
+          <div className="mt-3 sm:mt-4 flex flex-col items-center gap-3">
+            <span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-amber-200/80 font-sans font-medium">
               Save The Date
             </span>
-            <div className="h-[1px] w-10 sm:w-16 bg-zinc-300" />
-          </div>
 
-          {/* Scroll Indicator to Celebrations */}
-          <a
-            href="#events"
-            className="mt-6 sm:mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-800/20 bg-amber-50/50 text-xs font-mono tracking-widest uppercase text-amber-900/80 hover:bg-amber-100/60 transition-all pointer-events-auto cursor-pointer shadow-sm"
-          >
-            <span>Celebration Itinerary</span>
-            <span className="animate-bounce">↓</span>
-          </a>
+            <a
+              href="#events"
+              className="mt-1 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-400/40 bg-black/40 backdrop-blur-md text-[10px] sm:text-xs font-mono tracking-widest uppercase text-amber-200 hover:text-white hover:bg-black/60 transition-all pointer-events-auto cursor-pointer shadow-lg"
+            >
+              <span>Celebration Itinerary</span>
+              <span className="animate-bounce">↓</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>
