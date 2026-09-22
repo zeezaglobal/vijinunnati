@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 
 const DEFAULT_TOTAL_FRAMES = 145;
 const getFramePath = (index: number) =>
@@ -12,14 +12,14 @@ export default function SmoothVideoScroll({
   totalFrames?: number;
 }) {
   const TOTAL_FRAMES = totalFrames;
-  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<(HTMLImageElement | null)[]>([]);
 
-  const targetProgressRef = useRef(0);
-  const currentProgressRef = useRef(0);
-  const currentTargetFrameRef = useRef(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+
+  const currentFrameRef = useRef(0);
   const rafIdRef = useRef<number | null>(null);
   const lastDrawnFrameRef = useRef<number>(-1);
 
@@ -156,9 +156,8 @@ export default function SmoothVideoScroll({
         const frameIdx = i - 1;
         img.onload = () => {
           imagesRef.current[frameIdx] = img;
-          // If this frame matches where the user is currently scrolled, redraw immediately
-          if (Math.abs(frameIdx - currentTargetFrameRef.current) <= 2) {
-            renderFrame(currentTargetFrameRef.current);
+          if (Math.abs(frameIdx - Math.floor(currentFrameRef.current)) <= 2) {
+            renderFrame(Math.floor(currentFrameRef.current));
           }
         };
         img.src = getFramePath(i);
@@ -184,137 +183,126 @@ export default function SmoothVideoScroll({
     return () => window.removeEventListener("resize", handleResize);
   }, [handleResize]);
 
-  // Scroll tracking with RAF Lerp loop driving both video frame and text reveal
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      const container = containerRef.current;
-      const containerHeight = container.offsetHeight || container.clientHeight;
-      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-      const totalScrollableDistance = containerHeight - windowHeight;
+  // Play animation on click
+  const handleContainerClick = useCallback(() => {
+    if (isPlaying || isCompleted) return;
 
-      if (totalScrollableDistance <= 0) return;
+    setIsPlaying(true);
 
-      const scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-      const containerTop = container.offsetTop || 0;
-      const scrolled = scrollTop - containerTop;
+    const startTime = performance.now();
+    const duration = 2800; // Duration in ms to play from frame 0 to end (2.8s)
+    const VIDEO_END_FRAME = TOTAL_FRAMES - 1;
 
-      const progress = Math.min(
-        Math.max(scrolled / totalScrollableDistance, 0),
-        1
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Frame scrubbing up to progress = 1.0
+      const targetFrame = Math.min(
+        Math.floor(progress * TOTAL_FRAMES),
+        VIDEO_END_FRAME
       );
-      targetProgressRef.current = progress;
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("touchmove", handleScroll, { passive: true });
-    handleScroll();
-
-    // Constant parameters
-    const VIDEO_END_PROGRESS = 0.65; // Video completes at 65% scroll
-    const TEXT_START_PROGRESS = 0.65; // Text begins fading in at 65% scroll
-
-    const updateMotion = () => {
-      const diff = targetProgressRef.current - currentProgressRef.current;
-
-      // Responsive lerp: fast follow on touch, smooth settle
-      if (Math.abs(diff) > 0.0001) {
-        currentProgressRef.current += diff * 0.2;
-      } else {
-        currentProgressRef.current = targetProgressRef.current;
-      }
-
-      const p = currentProgressRef.current;
-
-      // 1. Scrub video: 0.0 to VIDEO_END_PROGRESS maps to frame 0 -> 144
-      const videoRatio = Math.min(p / VIDEO_END_PROGRESS, 1);
-      const targetFrame = Math.round(videoRatio * (TOTAL_FRAMES - 1));
-      currentTargetFrameRef.current = targetFrame;
+      currentFrameRef.current = targetFrame;
       renderFrame(targetFrame);
 
-      // 2. Reveal text: TEXT_START_PROGRESS to 1.0 maps to text opacity 0 -> 1
-      const rawTextProgress = Math.max(
+      // Text reveal during final 35% of animation
+      const TEXT_START_PROGRESS = 0.65;
+      const textProgress = Math.max(
         0,
-        Math.min(1, (p - TEXT_START_PROGRESS) / (1 - TEXT_START_PROGRESS))
+        Math.min(1, (progress - TEXT_START_PROGRESS) / (1 - TEXT_START_PROGRESS))
       );
 
       if (textRef.current) {
-        textRef.current.style.opacity = `${rawTextProgress}`;
+        textRef.current.style.opacity = `${textProgress}`;
         textRef.current.style.transform = `translateY(${
-          (1 - rawTextProgress) * 24
-        }px) scale(${0.96 + rawTextProgress * 0.04})`;
+          (1 - textProgress) * 24
+        }px) scale(${0.96 + textProgress * 0.04})`;
         textRef.current.style.pointerEvents =
-          rawTextProgress > 0.7 ? "auto" : "none";
+          textProgress > 0.7 ? "auto" : "none";
       }
 
-      rafIdRef.current = requestAnimationFrame(updateMotion);
+      if (progress < 1) {
+        rafIdRef.current = requestAnimationFrame(animate);
+      } else {
+        setIsPlaying(false);
+        setIsCompleted(true);
+      }
     };
 
-    rafIdRef.current = requestAnimationFrame(updateMotion);
+    rafIdRef.current = requestAnimationFrame(animate);
+  }, [isPlaying, isCompleted, renderFrame, TOTAL_FRAMES]);
 
+  useEffect(() => {
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("touchmove", handleScroll);
       if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     };
-  }, [renderFrame, TOTAL_FRAMES]);
+  }, []);
 
   return (
     <div
-      ref={containerRef}
-      className="relative w-full h-[380vh] bg-white text-zinc-900"
+      onClick={handleContainerClick}
+      className={`relative w-full h-screen h-[100dvh] bg-white text-zinc-900 overflow-hidden flex items-center justify-center select-none ${
+        !isCompleted ? "cursor-pointer" : ""
+      }`}
     >
-      {/* Sticky Fullscreen Viewport */}
-      <div className="sticky top-0 w-full h-screen h-[100dvh] overflow-hidden flex items-center justify-center bg-white">
-        {/* Hardware Accelerated Canvas */}
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 block w-full h-full object-cover pointer-events-none"
-        />
+      {/* Hardware Accelerated Canvas */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 block w-full h-full object-cover pointer-events-none"
+      />
 
-        {/* Text revealed on the white page: "Vijin weds Unnati" */}
-        <div
-          ref={textRef}
-          style={{ opacity: 0, transform: "translateY(24px) scale(0.96)" }}
-          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none select-none z-10"
-        >
-          <div className="max-w-4xl flex flex-col items-center">
-            {/* Elegant Top Decorative Accent */}
-            <div className="flex items-center justify-center gap-4 mb-6 sm:mb-8">
-              <div className="h-[1px] w-12 sm:w-20 bg-amber-700/30" />
-              <span className="text-[11px] sm:text-xs tracking-[0.35em] uppercase font-sans font-medium text-amber-900/70">
-                Together with their families
-              </span>
-              <div className="h-[1px] w-12 sm:w-20 bg-amber-700/30" />
-            </div>
-
-            {/* Main Names: Vijin weds Unnati in romantic wedding script */}
-            <h1 className="font-script text-6xl sm:text-8xl md:text-9xl lg:text-[10rem] text-zinc-900 tracking-normal font-normal leading-tight">
-              <span className="block text-zinc-950">Vijin</span>
-              <span className="block my-1 sm:my-3 text-3xl sm:text-5xl md:text-6xl text-amber-800/85 font-normal">
-                weds
-              </span>
-              <span className="block text-zinc-950">Unnati</span>
-            </h1>
-
-            {/* Subtle Divider & Subtitle */}
-            <div className="mt-8 sm:mt-12 flex items-center justify-center gap-3">
-              <div className="h-[1px] w-10 sm:w-16 bg-zinc-300" />
-              <span className="text-xs sm:text-sm tracking-[0.3em] uppercase text-zinc-500 font-sans font-medium">
-                Save The Date
-              </span>
-              <div className="h-[1px] w-10 sm:w-16 bg-zinc-300" />
-            </div>
-
-            {/* Scroll Indicator to Celebrations */}
-            <a
-              href="#events"
-              className="mt-6 sm:mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-800/20 bg-amber-50/50 text-xs font-mono tracking-widest uppercase text-amber-900/80 hover:bg-amber-100/60 transition-all pointer-events-auto cursor-pointer shadow-sm"
-            >
-              <span>Celebration Itinerary</span>
-              <span className="animate-bounce">↓</span>
-            </a>
+      {/* Tap/Click to Play prompt overlay before click */}
+      {!isPlaying && !isCompleted && (
+        <div className="absolute z-20 bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-pulse pointer-events-none">
+          <div className="px-5 py-2.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white text-xs sm:text-sm font-sans tracking-widest uppercase shadow-lg flex items-center gap-2">
+            <span>Tap to open invitation</span>
+            <span className="text-amber-300">✨</span>
           </div>
+        </div>
+      )}
+
+      {/* Text revealed on white background: "Vijin weds Unnati" */}
+      <div
+        ref={textRef}
+        style={{ opacity: 0, transform: "translateY(24px) scale(0.96)" }}
+        className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none z-10"
+      >
+        <div className="max-w-4xl flex flex-col items-center">
+          {/* Elegant Top Decorative Accent */}
+          <div className="flex items-center justify-center gap-4 mb-6 sm:mb-8">
+            <div className="h-[1px] w-12 sm:w-20 bg-amber-700/30" />
+            <span className="text-[11px] sm:text-xs tracking-[0.35em] uppercase font-sans font-medium text-amber-900/70">
+              Together with their families
+            </span>
+            <div className="h-[1px] w-12 sm:w-20 bg-amber-700/30" />
+          </div>
+
+          {/* Main Names: Vijin weds Unnati in romantic wedding script */}
+          <h1 className="font-script text-6xl sm:text-8xl md:text-9xl lg:text-[10rem] text-zinc-900 tracking-normal font-normal leading-tight">
+            <span className="block text-zinc-950">Vijin</span>
+            <span className="block my-1 sm:my-3 text-3xl sm:text-5xl md:text-6xl text-amber-800/85 font-normal">
+              weds
+            </span>
+            <span className="block text-zinc-950">Unnati</span>
+          </h1>
+
+          {/* Subtle Divider & Subtitle */}
+          <div className="mt-8 sm:mt-12 flex items-center justify-center gap-3">
+            <div className="h-[1px] w-10 sm:w-16 bg-zinc-300" />
+            <span className="text-xs sm:text-sm tracking-[0.3em] uppercase text-zinc-500 font-sans font-medium">
+              Save The Date
+            </span>
+            <div className="h-[1px] w-10 sm:w-16 bg-zinc-300" />
+          </div>
+
+          {/* Scroll Indicator to Celebrations */}
+          <a
+            href="#events"
+            className="mt-6 sm:mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-800/20 bg-amber-50/50 text-xs font-mono tracking-widest uppercase text-amber-900/80 hover:bg-amber-100/60 transition-all pointer-events-auto cursor-pointer shadow-sm"
+          >
+            <span>Celebration Itinerary</span>
+            <span className="animate-bounce">↓</span>
+          </a>
         </div>
       </div>
     </div>
