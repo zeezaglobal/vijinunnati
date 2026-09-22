@@ -121,7 +121,7 @@ export default function WeddingEvents() {
         </div>
       </section>
 
-      {/* 1. MEHENDI (Photo 1) - Clean background with dark text */}
+      {/* 1. MEHENDI (Photo 1) - Clean background with dark text centered & nudged slightly up */}
       <section className="relative min-h-screen w-full flex items-center justify-center py-24 px-6 overflow-hidden">
         {/* Fullscreen Photo Background */}
         <div className="absolute inset-0 z-0">
@@ -135,8 +135,8 @@ export default function WeddingEvents() {
           />
         </div>
 
-        {/* Text centered in middle with rich dark colors */}
-        <div className="relative z-10 max-w-3xl w-full mx-auto text-center flex flex-col items-center">
+        {/* Text centered with subtle upward nudge */}
+        <div className="relative z-10 max-w-3xl w-full mx-auto text-center flex flex-col items-center -translate-y-8 sm:-translate-y-12">
           <span className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-emerald-950 font-bold drop-shadow-sm mb-2">
             {EVENTS[0].day}
           </span>
