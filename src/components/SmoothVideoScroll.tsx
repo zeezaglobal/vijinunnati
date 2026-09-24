@@ -375,7 +375,7 @@ export default function SmoothVideoScroll({
               mb-1
             "
           >
-            Our Wedding Day
+            Our Wedding Date
           </span>
 
           <span

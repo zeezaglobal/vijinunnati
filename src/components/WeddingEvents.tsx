@@ -830,12 +830,14 @@ export default function WeddingEvents() {
             }}
           >
             {[
-              "/memories/1.jpg",
+              "/memories/1.png",
               "/memories/2.jpg",
               "/memories/3.jpg",
               "/memories/4.jpg",
               "/memories/5.jpg",
               "/memories/6.jpg",
+              "/memories/7.jpg",
+              "/memories/8.png",
             ].map((photo, index) => (
               <div
                 key={photo}
