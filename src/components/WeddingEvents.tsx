@@ -90,6 +90,8 @@ export default function WeddingEvents() {
   const googleMapsUrl =
     "https://maps.google.com/?q=Gardenia+Convention+Center+Njekkadu";
 
+    const googleMaps2Url ="https://maps.app.goo.gl/a9bRgHdQkRk19GPr8?g_st=ic"
+
   return (
     <div id="events" className="relative w-full bg-white text-white">
       {/* Introduction Transition Banner */}
@@ -744,6 +746,60 @@ export default function WeddingEvents() {
                 Dress Code: {EVENTS[3].dressCode}
               </span>
             </div>
+            {/* Location */}
+            <a
+                href={googleMaps2Url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+            mt-6
+            inline-flex
+            items-center
+            gap-2
+            px-4
+            py-2
+            rounded-full
+            border
+            border-[#A67C45]/50
+            bg-[#FFF9ED]/75
+            hover:bg-[#F5E5CD]
+            text-xs
+            sm:text-sm
+            font-sans
+            tracking-wider
+            uppercase
+            text-[#5A321C]
+            hover:text-[#3E2415]
+            transition-all
+            cursor-pointer
+            pointer-events-auto
+            shadow-sm
+            backdrop-blur-[2px]
+          "
+              >
+                <svg
+                  className="w-4 h-4 text-[#A65D4A] shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  />
+
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+
+                <span>Vibes Beach House ↗</span>
+              </a>
           </div>
         </div>
       </section>
