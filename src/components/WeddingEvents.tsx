@@ -90,7 +90,7 @@ export default function WeddingEvents() {
   const googleMapsUrl =
     "https://maps.google.com/?q=Gardenia+Convention+Center+Njekkadu";
 
-    const googleMaps2Url ="https://maps.app.goo.gl/a9bRgHdQkRk19GPr8?g_st=ic"
+  const googleMaps2Url = "https://maps.app.goo.gl/a9bRgHdQkRk19GPr8?g_st=ic";
 
   return (
     <div id="events" className="relative w-full bg-white text-white">
@@ -292,15 +292,19 @@ export default function WeddingEvents() {
           text-2xl
           sm:text-3xl
           text-[#A66A1F]
-          mb-6
+          
           drop-shadow-[0_1px_1px_rgba(255,255,255,0.7)]
         "
             >
               Sacred rituals of love & devotion
             </p>
 
+            <div className="mb-6 flex flex-wrap items-center justify-center gap-6 text-xs font-mono tracking-widest uppercase text-zinc-600">
+              <span>22nd NOVEMBER SUNDAY</span>
+            </div>
+
             {/* Time + Dress Code */}
-            <div className="flex flex-row items-center justify-center gap-6 sm:gap-10 font-serif text-center">
+            <div className="flex flex-row items-center justify-center gap-6 sm:gap-10 font-serif text-center text-[11px]">
               {/* Time */}
               <div>
                 <span
@@ -480,12 +484,16 @@ export default function WeddingEvents() {
             text-2xl
             sm:text-3xl
             text-[#A65D4A]
-            mb-6
+          
             drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]
           "
               >
                 The auspicious Muhurtham
               </p>
+
+              <div className="mb-6 flex flex-wrap items-center justify-center gap-6 text-xs font-mono tracking-widest uppercase text-zinc-600">
+                <span>22nd NOVEMBER SUNDAY</span>
+              </div>
 
               {/* Time + Dress Code */}
               <div className="flex flex-row items-center justify-center gap-6 sm:gap-10 font-serif text-center">
@@ -748,10 +756,10 @@ export default function WeddingEvents() {
             </div>
             {/* Location */}
             <a
-                href={googleMaps2Url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="
+              href={googleMaps2Url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
             mt-6
             inline-flex
             items-center
@@ -776,30 +784,30 @@ export default function WeddingEvents() {
             shadow-sm
             backdrop-blur-[2px]
           "
+            >
+              <svg
+                className="w-4 h-4 text-[#A65D4A] shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <svg
-                  className="w-4 h-4 text-[#A65D4A] shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                />
 
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
 
-                <span>Vibes Beach House ↗</span>
-              </a>
+              <span>Vibes Beach House ↗</span>
+            </a>
           </div>
         </div>
       </section>
