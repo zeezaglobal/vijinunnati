@@ -250,175 +250,174 @@ export default function WeddingEvents() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 max-w-3xl w-full mx-auto text-center flex flex-col items-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-16 w-full max-w-4xl mx-auto text-center">
-            {/* Vidhi */}
-            <div className="flex flex-col items-center">
-              {/* Tradition */}
-              <span
-                className="
-            text-xs
-            font-mono
-            uppercase
-            tracking-[0.3em]
-            text-[#7A4A16]
-            font-semibold
-            mb-2
-          "
-              >
-                Marathi Tradition
-              </span>
+        <div className="relative z-10 w-full max-w-4xl mx-auto flex justify-center">
+          {/* Vidhi */}
+          <div className="flex flex-col items-center text-center w-full max-w-2xl">
+            {/* Tradition */}
+            <span
+              className="
+          text-xs
+          font-mono
+          uppercase
+          tracking-[0.3em]
+          text-[#7A4A16]
+          font-semibold
+          mb-2
+        "
+            >
+              Marathi Tradition
+            </span>
 
-              {/* Title */}
-              <h4
-                className="
-            text-4xl
-            sm:text-5xl
-            font-serif
-            font-normal
-            text-[#6B3F12]
-            mb-2
-            drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]
-          "
-              >
-                Vidhi
-              </h4>
+            {/* Title */}
+            <h4
+              className="
+          text-4xl
+          sm:text-5xl
+          font-serif
+          font-normal
+          text-[#6B3F12]
+          mb-2
+          drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]
+        "
+            >
+              Vidhi
+            </h4>
 
-              {/* Subtitle */}
-              <p
-                className="
-            font-script
-            text-2xl
-            sm:text-3xl
-            text-[#A66A1F]
-            mb-6
-            drop-shadow-[0_1px_1px_rgba(255,255,255,0.7)]
-          "
-              >
-                Sacred rituals of love & devotion
-              </p>
+            {/* Subtitle */}
+            <p
+              className="
+          font-script
+          text-2xl
+          sm:text-3xl
+          text-[#A66A1F]
+          mb-6
+          drop-shadow-[0_1px_1px_rgba(255,255,255,0.7)]
+        "
+            >
+              Sacred rituals of love & devotion
+            </p>
 
-              {/* Time + Dress Code */}
-              <div className="flex flex-row items-center justify-center gap-6 sm:gap-10 font-serif text-center">
-                {/* Time */}
-                <div>
-                  <span
-                    className="
-                text-[11px]
-                sm:text-xs
-                font-mono
-                uppercase
-                tracking-wider
-                text-[#806B52]
-                block
-                font-sans
-                mb-1
-              "
-                  >
-                    Time
-                  </span>
+            {/* Time + Dress Code */}
+            <div className="flex flex-row items-center justify-center gap-6 sm:gap-10 font-serif text-center">
+              {/* Time */}
+              <div>
+                <span
+                  className="
+              text-[11px]
+              sm:text-xs
+              font-mono
+              uppercase
+              tracking-wider
+              text-[#806B52]
+              block
+              font-sans
+              mb-1
+            "
+                >
+                  Time
+                </span>
 
-                  <p
-                    className="
-                text-sm
-                sm:text-lg
-                text-[#4A2B12]
-                font-semibold
-              "
-                  >
-                    7:00 AM
-                  </p>
-                </div>
-
-                {/* Divider */}
-                <div className="h-8 w-[1px] bg-[#B88A45]/50" />
-
-                {/* Dress Code */}
-                <div>
-                  <span
-                    className="
-                text-[11px]
-                sm:text-xs
-                font-mono
-                uppercase
-                tracking-wider
-                text-[#806B52]
-                block
-                font-sans
-                mb-1
-              "
-                  >
-                    Dress Code
-                  </span>
-
-                  <p
-                    className="
-                text-sm
-                sm:text-lg
-                text-[#6B3F12]
-                font-semibold
-              "
-                  >
-                    Maharashtrian Traditional
-                  </p>
-                </div>
+                <p
+                  className="
+              text-sm
+              sm:text-lg
+              text-[#4A2B12]
+              font-semibold
+            "
+                >
+                  7:00 AM
+                </p>
               </div>
 
-              {/* Location */}
-              <a
-                href={googleMapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="
-            mt-6
-            inline-flex
-            items-center
-            gap-2
-            px-4
-            py-2
-            rounded-full
-            border
-            border-[#A66A1F]/40
-            bg-[#FFF8E8]/70
-            hover:bg-[#F4E4C4]
-            text-xs
-            sm:text-sm
-            font-sans
-            tracking-wider
-            uppercase
-            text-[#6B3F12]
-            hover:text-[#4A2B12]
-            transition-all
-            cursor-pointer
-            pointer-events-auto
-            shadow-sm
-            backdrop-blur-[2px]
-          "
-              >
-                <svg
-                  className="w-4 h-4 text-[#A66A1F] shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+              {/* Divider */}
+              <div className="h-8 w-[1px] bg-[#B88A45]/50" />
+
+              {/* Dress Code */}
+              <div>
+                <span
+                  className="
+              text-[11px]
+              sm:text-xs
+              font-mono
+              uppercase
+              tracking-wider
+              text-[#806B52]
+              block
+              font-sans
+              mb-1
+            "
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
+                  Dress Code
+                </span>
 
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-
-                <span>Gardenia Convention Center ↗</span>
-              </a>
+                <p
+                  className="
+              text-sm
+              sm:text-lg
+              text-[#6B3F12]
+              font-semibold
+            "
+                >
+                  Maharashtrian Traditional
+                </p>
+              </div>
             </div>
+
+            {/* Location */}
+            <a
+              href={googleMapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+          mt-6
+          inline-flex
+          items-center
+          justify-center
+          gap-2
+          px-5
+          py-3
+          rounded-full
+          border
+          border-[#A66A1F]/40
+          bg-[#FFF8E8]/70
+          hover:bg-[#F4E4C4]
+          text-xs
+          sm:text-sm
+          font-sans
+          tracking-wider
+          uppercase
+          text-[#6B3F12]
+          hover:text-[#4A2B12]
+          transition-all
+          cursor-pointer
+          pointer-events-auto
+          shadow-sm
+          backdrop-blur-[2px]
+        "
+            >
+              <svg
+                className="w-4 h-4 text-[#A66A1F] shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                />
+
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+
+              <span>Gardenia Convention Center ↗</span>
+            </a>
           </div>
         </div>
       </section>
@@ -437,8 +436,9 @@ export default function WeddingEvents() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 max-w-3xl w-full mx-auto text-center flex flex-col items-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-16 w-full max-w-4xl mx-auto text-center">
+        <div className="relative z-10 w-full max-w-4xl mx-auto flex justify-center">
+          {/* Vidhi */}
+          <div className="flex flex-col items-center text-center w-full max-w-2xl">
             {/* Vivaham */}
             <div className="flex flex-col items-center">
               {/* Tradition */}
