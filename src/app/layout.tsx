@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     siteName: "Vijin weds Unnati",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-image-v2.png",
         width: 1200,
         height: 630,
         alt: "Vijin weds Unnati",
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     title: "Vijin weds Unnati",
     description:
       "Wedding celebration of Vijin and Unnati • November 20–22, 2026. Join us for Mehendi, Haldi, Vivaham, and Reception.",
-    images: ["/og-image.png"],
+    images: ["/og-image-v2.png"],
   },
   icons: {
     icon: "/icon.svg",
