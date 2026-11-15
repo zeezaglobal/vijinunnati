@@ -74,6 +74,9 @@ export default function WeddingEvents() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  // Copy link feedback
+  const [copiedLink, setCopiedLink] = useState(false);
+
   const moveNoButton = () => {
     const angle = Math.random() * 2 * Math.PI;
     const distance = 70 + Math.random() * 70;
@@ -91,6 +94,18 @@ export default function WeddingEvents() {
     "https://maps.google.com/?q=Gardenia+Convention+Center+Njekkadu";
 
   const googleMaps2Url = "https://maps.app.goo.gl/a9bRgHdQkRk19GPr8?g_st=ic";
+
+  const googlePhotosAlbumUrl = "https://photos.app.goo.gl/i8X616e7hZXZD7x26";
+
+  const handleCopyPhotoLink = async () => {
+    try {
+      await navigator.clipboard.writeText(googlePhotosAlbumUrl);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2500);
+    } catch (err) {
+      console.error("Failed to copy link:", err);
+    }
+  };
 
   return (
     <div id="events" className="relative w-full bg-white text-white">
@@ -169,9 +184,7 @@ export default function WeddingEvents() {
       {/* DIVIDER */}
       <div className="flex items-center justify-center gap-4 bg-[#faf6ed] py-8">
         <div className="h-px w-16 bg-[#d6b56a]/50" />
-
         <span className="text-xl text-[#b88a45]">✦</span>
-
         <div className="h-px w-16 bg-[#d6b56a]/50" />
       </div>
 
@@ -238,6 +251,7 @@ export default function WeddingEvents() {
           </p>
         </div>
       </section>
+
       {/* 3. VIDHI DAY - Clean background with dark text centered in middle */}
       <section className="relative min-h-screen w-full flex items-center justify-center py-24 px-6 overflow-hidden">
         {/* Background */}
@@ -255,47 +269,15 @@ export default function WeddingEvents() {
         <div className="relative z-10 w-full max-w-4xl mx-auto flex justify-center">
           {/* Vidhi */}
           <div className="flex flex-col items-center text-center w-full max-w-2xl">
-            {/* Tradition */}
-            <span
-              className="
-          text-xs
-          font-mono
-          uppercase
-          tracking-[0.3em]
-          text-[#7A4A16]
-          font-semibold
-          mb-2
-        "
-            >
+            <span className="text-xs font-mono uppercase tracking-[0.3em] text-[#7A4A16] font-semibold mb-2">
               Marathi Tradition
             </span>
 
-            {/* Title */}
-            <h4
-              className="
-          text-4xl
-          sm:text-5xl
-          font-serif
-          font-normal
-          text-[#6B3F12]
-          mb-2
-          drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]
-        "
-            >
+            <h4 className="text-4xl sm:text-5xl font-serif font-normal text-[#6B3F12] mb-2 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">
               Vidhi
             </h4>
 
-            {/* Subtitle */}
-            <p
-              className="
-          font-script
-          text-2xl
-          sm:text-3xl
-          text-[#A66A1F]
-          
-          drop-shadow-[0_1px_1px_rgba(255,255,255,0.7)]
-        "
-            >
+            <p className="font-script text-2xl sm:text-3xl text-[#A66A1F] drop-shadow-[0_1px_1px_rgba(255,255,255,0.7)]">
               Sacred rituals of love & devotion
             </p>
 
@@ -305,65 +287,22 @@ export default function WeddingEvents() {
 
             {/* Time + Dress Code */}
             <div className="flex flex-row items-center justify-center gap-6 sm:gap-10 font-serif text-center text-[11px]">
-              {/* Time */}
               <div>
-                <span
-                  className="
-              text-[11px]
-              sm:text-xs
-              font-mono
-              uppercase
-              tracking-wider
-              text-[#806B52]
-              block
-              font-sans
-              mb-1
-            "
-                >
+                <span className="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#806B52] block font-sans mb-1">
                   Time
                 </span>
-
-                <p
-                  className="
-              text-sm
-              sm:text-lg
-              text-[#4A2B12]
-              font-semibold
-            "
-                >
+                <p className="text-sm sm:text-lg text-[#4A2B12] font-semibold">
                   7:00 AM
                 </p>
               </div>
 
-              {/* Divider */}
               <div className="h-8 w-[1px] bg-[#B88A45]/50" />
 
-              {/* Dress Code */}
               <div>
-                <span
-                  className="
-              text-[11px]
-              sm:text-xs
-              font-mono
-              uppercase
-              tracking-wider
-              text-[#806B52]
-              block
-              font-sans
-              mb-1
-            "
-                >
+                <span className="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#806B52] block font-sans mb-1">
                   Dress Code
                 </span>
-
-                <p
-                  className="
-              text-sm
-              sm:text-lg
-              text-[#6B3F12]
-              font-semibold
-            "
-                >
+                <p className="text-sm sm:text-lg text-[#6B3F12] font-semibold">
                   Maharashtrian Traditional
                 </p>
               </div>
@@ -374,32 +313,7 @@ export default function WeddingEvents() {
               href={googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="
-          mt-6
-          inline-flex
-          items-center
-          justify-center
-          gap-2
-          px-5
-          py-3
-          rounded-full
-          border
-          border-[#A66A1F]/40
-          bg-[#FFF8E8]/70
-          hover:bg-[#F4E4C4]
-          text-xs
-          sm:text-sm
-          font-sans
-          tracking-wider
-          uppercase
-          text-[#6B3F12]
-          hover:text-[#4A2B12]
-          transition-all
-          cursor-pointer
-          pointer-events-auto
-          shadow-sm
-          backdrop-blur-[2px]
-        "
+              className="mt-6 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-[#A66A1F]/40 bg-[#FFF8E8]/70 hover:bg-[#F4E4C4] text-xs sm:text-sm font-sans tracking-wider uppercase text-[#6B3F12] hover:text-[#4A2B12] transition-all cursor-pointer pointer-events-auto shadow-sm backdrop-blur-[2px]"
             >
               <svg
                 className="w-4 h-4 text-[#A66A1F] shrink-0"
@@ -413,7 +327,6 @@ export default function WeddingEvents() {
                   strokeWidth="1.5"
                   d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
                 />
-
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -421,7 +334,6 @@ export default function WeddingEvents() {
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-
               <span>Gardenia Convention Center ↗</span>
             </a>
           </div>
@@ -443,51 +355,17 @@ export default function WeddingEvents() {
 
         {/* Content */}
         <div className="relative z-10 w-full max-w-4xl mx-auto flex justify-center">
-          {/* Vidhi */}
           <div className="flex flex-col items-center text-center w-full max-w-2xl">
-            {/* Vivaham */}
             <div className="flex flex-col items-center">
-              {/* Tradition */}
-              <span
-                className="
-            text-xs
-            font-mono
-            uppercase
-            tracking-[0.3em]
-            text-[#76552F]
-            font-semibold
-            mb-2
-          "
-              >
+              <span className="text-xs font-mono uppercase tracking-[0.3em] text-[#76552F] font-semibold mb-2">
                 Kerala Tradition
               </span>
 
-              {/* Title */}
-              <h4
-                className="
-            text-4xl
-            sm:text-5xl
-            font-serif
-            font-normal
-            text-[#5A321C]
-            mb-2
-            drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]
-          "
-              >
+              <h4 className="text-4xl sm:text-5xl font-serif font-normal text-[#5A321C] mb-2 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">
                 Vivaham
               </h4>
 
-              {/* Subtitle */}
-              <p
-                className="
-            font-script
-            text-2xl
-            sm:text-3xl
-            text-[#A65D4A]
-          
-            drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]
-          "
-              >
+              <p className="font-script text-2xl sm:text-3xl text-[#A65D4A] drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">
                 The auspicious Muhurtham
               </p>
 
@@ -497,65 +375,22 @@ export default function WeddingEvents() {
 
               {/* Time + Dress Code */}
               <div className="flex flex-row items-center justify-center gap-6 sm:gap-10 font-serif text-center">
-                {/* Time */}
                 <div>
-                  <span
-                    className="
-                text-[11px]
-                sm:text-xs
-                font-mono
-                uppercase
-                tracking-wider
-                text-[#806B52]
-                block
-                font-sans
-                mb-1
-              "
-                  >
+                  <span className="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#806B52] block font-sans mb-1">
                     Muhurtham Time
                   </span>
-
-                  <p
-                    className="
-                text-sm
-                sm:text-lg
-                text-[#4A2B18]
-                font-semibold
-              "
-                  >
+                  <p className="text-sm sm:text-lg text-[#4A2B18] font-semibold">
                     11:50 AM – 12:20 PM
                   </p>
                 </div>
 
-                {/* Divider */}
                 <div className="h-8 w-[1px] bg-[#A67C45]/50" />
 
-                {/* Dress Code */}
                 <div>
-                  <span
-                    className="
-                text-[11px]
-                sm:text-xs
-                font-mono
-                uppercase
-                tracking-wider
-                text-[#806B52]
-                block
-                font-sans
-                mb-1
-              "
-                  >
+                  <span className="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#806B52] block font-sans mb-1">
                     Dress Code
                   </span>
-
-                  <p
-                    className="
-                text-sm
-                sm:text-lg
-                text-[#5A321C]
-                font-semibold
-              "
-                  >
+                  <p className="text-sm sm:text-lg text-[#5A321C] font-semibold">
                     Kerala Traditional
                   </p>
                 </div>
@@ -566,31 +401,7 @@ export default function WeddingEvents() {
                 href={googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="
-            mt-6
-            inline-flex
-            items-center
-            gap-2
-            px-4
-            py-2
-            rounded-full
-            border
-            border-[#A67C45]/50
-            bg-[#FFF9ED]/75
-            hover:bg-[#F5E5CD]
-            text-xs
-            sm:text-sm
-            font-sans
-            tracking-wider
-            uppercase
-            text-[#5A321C]
-            hover:text-[#3E2415]
-            transition-all
-            cursor-pointer
-            pointer-events-auto
-            shadow-sm
-            backdrop-blur-[2px]
-          "
+                className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#A67C45]/50 bg-[#FFF9ED]/75 hover:bg-[#F5E5CD] text-xs sm:text-sm font-sans tracking-wider uppercase text-[#5A321C] hover:text-[#3E2415] transition-all cursor-pointer pointer-events-auto shadow-sm backdrop-blur-[2px]"
               >
                 <svg
                   className="w-4 h-4 text-[#A65D4A] shrink-0"
@@ -604,7 +415,6 @@ export default function WeddingEvents() {
                     strokeWidth="1.5"
                     d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
                   />
-
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -612,7 +422,6 @@ export default function WeddingEvents() {
                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                   />
                 </svg>
-
                 <span>Gardenia Convention Center ↗</span>
               </a>
             </div>
@@ -623,9 +432,7 @@ export default function WeddingEvents() {
       {/* DIVIDER */}
       <div className="flex items-center justify-center gap-4 bg-[#faf6ed] py-8">
         <div className="h-px w-16 bg-[#d6b56a]/50" />
-
         <span className="text-xl text-[#b88a45]">✦</span>
-
         <div className="h-px w-16 bg-[#d6b56a]/50" />
       </div>
 
@@ -646,144 +453,39 @@ export default function WeddingEvents() {
         {/* Text positioned inside the dark blue area */}
         <div className="relative z-10 flex min-h-screen w-full items-start justify-center px-6 pt-[45%] sm:pt-[23%] md:pt-[22%]">
           <div className="w-full max-w-4xl text-center">
-            {/* Date + Day */}
             <div className="mb-3 flex items-center justify-center gap-3">
-              <span
-                className="
-            font-sans
-            text-xs
-            font-semibold
-            uppercase
-            tracking-[0.35em]
-            text-[#F8EEDB]
-            drop-shadow-[0_2px_4px_rgba(0,0,0,0.65)]
-            sm:text-sm
-          "
-              >
+              <span className="font-sans text-xs font-semibold uppercase tracking-[0.35em] text-[#F8EEDB] drop-shadow-[0_2px_4px_rgba(0,0,0,0.65)] sm:text-sm">
                 {EVENTS[3].date}
               </span>
-
               <span className="text-[#D7A94B] text-xs">•</span>
-
-              <span
-                className="
-            font-sans
-            text-xs
-            font-semibold
-            uppercase
-            tracking-[0.35em]
-            text-[#F8EEDB]
-            drop-shadow-[0_2px_4px_rgba(0,0,0,0.65)]
-            sm:text-sm
-          "
-              >
+              <span className="font-sans text-xs font-semibold uppercase tracking-[0.35em] text-[#F8EEDB] drop-shadow-[0_2px_4px_rgba(0,0,0,0.65)] sm:text-sm">
                 {EVENTS[3].day}
               </span>
             </div>
 
-            {/* Script Accent */}
-            <p
-              className="
-          mb-2
-          font-script
-          text-4xl
-          font-medium
-          leading-none
-          text-[#E6B95C]
-          drop-shadow-[0_3px_5px_rgba(0,0,0,0.75)]
-          sm:text-5xl
-          md:text-6xl
-        "
-            >
+            <p className="mb-2 font-script text-4xl font-medium leading-none text-[#E6B95C] drop-shadow-[0_3px_5px_rgba(0,0,0,0.75)] sm:text-5xl md:text-6xl">
               {EVENTS[3].scriptAccent}
             </p>
 
-            {/* Main Title */}
-            <h3
-              className="
-          mb-4
-          font-serif
-          text-4xl
-          font-normal
-          leading-tight
-          tracking-tight
-          text-[#FFF8E8]
-          drop-shadow-[0_3px_6px_rgba(0,0,0,0.75)]
-          sm:text-5xl
-          md:text-6xl
-          lg:text-7xl
-        "
-            >
+            <h3 className="mb-4 font-serif text-4xl font-normal leading-tight tracking-tight text-[#FFF8E8] drop-shadow-[0_3px_6px_rgba(0,0,0,0.75)] sm:text-5xl md:text-6xl lg:text-7xl">
               {EVENTS[3].title}
             </h3>
 
-            {/* Time + Dress Code */}
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-              {/* Time */}
-              <span
-                className="
-            font-serif
-            text-lg
-            font-medium
-            tracking-wide
-            text-[#F8EEDB]
-            drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]
-            sm:text-2xl
-          "
-              >
+              <span className="font-serif text-lg font-medium tracking-wide text-[#F8EEDB] drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] sm:text-2xl">
                 {EVENTS[3].time}
               </span>
-
-              {/* Separator */}
               <span className="text-[#D7A94B]">•</span>
-
-              {/* Dress Code */}
-              <span
-                className="
-            font-sans
-            text-xs
-            font-bold
-            uppercase
-            tracking-[0.15em]
-            text-[#E6B95C]
-            drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]
-            sm:text-sm
-            md:text-base
-          "
-              >
+              <span className="font-sans text-xs font-bold uppercase tracking-[0.15em] text-[#E6B95C] drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] sm:text-sm md:text-base">
                 Dress Code: {EVENTS[3].dressCode}
               </span>
             </div>
-            {/* Location */}
+
             <a
               href={googleMaps2Url}
               target="_blank"
               rel="noopener noreferrer"
-              className="
-            mt-6
-            inline-flex
-            items-center
-            gap-2
-            px-4
-            py-2
-            rounded-full
-            border
-            border-[#A67C45]/50
-            bg-[#FFF9ED]/75
-            hover:bg-[#F5E5CD]
-            text-xs
-            sm:text-sm
-            font-sans
-            tracking-wider
-            uppercase
-            text-[#5A321C]
-            hover:text-[#3E2415]
-            transition-all
-            cursor-pointer
-            pointer-events-auto
-            shadow-sm
-            backdrop-blur-[2px]
-          "
+              className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#A67C45]/50 bg-[#FFF9ED]/75 hover:bg-[#F5E5CD] text-xs sm:text-sm font-sans tracking-wider uppercase text-[#5A321C] hover:text-[#3E2415] transition-all cursor-pointer pointer-events-auto shadow-sm backdrop-blur-[2px]"
             >
               <svg
                 className="w-4 h-4 text-[#A65D4A] shrink-0"
@@ -797,7 +499,6 @@ export default function WeddingEvents() {
                   strokeWidth="1.5"
                   d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
                 />
-
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -805,18 +506,16 @@ export default function WeddingEvents() {
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-
               <span>Vibes Beach House ↗</span>
             </a>
           </div>
         </div>
       </section>
+
       {/* DIVIDER */}
       <div className="flex items-center justify-center gap-4 bg-[#faf6ed] py-8">
         <div className="h-px w-16 bg-[#d6b56a]/50" />
-
         <span className="text-xl text-[#b88a45]">✦</span>
-
         <div className="h-px w-16 bg-[#d6b56a]/50" />
       </div>
 
@@ -824,49 +523,16 @@ export default function WeddingEvents() {
         id="memories"
         className="relative w-full overflow-hidden bg-[#faf6ed] pb-10 sm:pb-24"
       >
-        {/* Heading */}
         <div className="mx-auto mb-10 max-w-3xl px-6 text-center">
-          <span
-            className="
-        font-sans
-        text-[10px]
-        font-semibold
-        uppercase
-        tracking-[0.35em]
-        text-[#a66a1f]
-        sm:text-xs
-      "
-          >
+          <span className="font-sans text-[10px] font-semibold uppercase tracking-[0.35em] text-[#a66a1f] sm:text-xs">
             A glimpse into our journey
           </span>
 
-          <h2
-            className="
-        mt-2
-        font-script
-        text-5xl
-        font-medium
-        leading-none
-        text-[#6b3f12]
-        sm:text-6xl
-        md:text-7xl
-      "
-          >
+          <h2 className="mt-2 font-script text-5xl font-medium leading-none text-[#6b3f12] sm:text-6xl md:text-7xl">
             Our Memories
           </h2>
 
-          <p
-            className="
-        mx-auto
-        mt-4
-        max-w-xl
-        font-serif
-        text-sm
-        leading-relaxed
-        text-[#806b52]
-        sm:text-base
-      "
-          >
+          <p className="mx-auto mt-4 max-w-xl font-serif text-sm leading-relaxed text-[#806b52] sm:text-base">
             A collection of moments, laughter, and memories that brought us
             here.
           </p>
@@ -875,19 +541,7 @@ export default function WeddingEvents() {
         {/* Carousel */}
         <div className="relative w-full">
           <div
-            className="
-        flex
-        gap-5
-        overflow-x-auto
-        px-6
-        pb-6
-        snap-x
-        snap-mandatory
-        scroll-smooth
-        scrollbar-hide
-        sm:gap-6
-        sm:px-[8%]
-      "
+            className="flex gap-5 overflow-x-auto px-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-hide sm:gap-6 sm:px-[8%]"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -905,81 +559,40 @@ export default function WeddingEvents() {
             ].map((photo, index) => (
               <div
                 key={photo}
-                className="
-            relative
-            h-[420px]
-            min-w-[280px]
-            snap-center
-            overflow-hidden
-            rounded-[24px]
-            border
-            border-[#d6b56a]/40
-            bg-white
-            shadow-[0_10px_35px_rgba(92,60,20,0.12)]
-            sm:h-[500px]
-            sm:min-w-[350px]
-            md:h-[560px]
-            md:min-w-[420px]
-          "
+                className="relative h-[420px] min-w-[280px] snap-center overflow-hidden rounded-[24px] border border-[#d6b56a]/40 bg-white shadow-[0_10px_35px_rgba(92,60,20,0.12)] sm:h-[500px] sm:min-w-[350px] md:h-[560px] md:min-w-[420px]"
               >
                 <Image
                   src={photo}
                   alt={`Vijin and Unnati memory ${index + 1}`}
                   fill
                   sizes="(max-width: 640px) 80vw, (max-width: 1024px) 45vw, 420px"
-                  className="
-              object-cover
-              transition-transform
-              duration-700
-              hover:scale-105
-            "
+                  className="object-cover transition-transform duration-700 hover:scale-105"
                 />
 
-                {/* Soft overlay */}
                 <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/30 to-transparent" />
 
-                {/* Photo number */}
-                <div
-                  className="
-              absolute
-              bottom-4
-              left-4
-              flex
-              h-8
-              w-8
-              items-center
-              justify-center
-              rounded-full
-              bg-white/80
-              text-[10px]
-              font-semibold
-              text-[#6b3f12]
-              backdrop-blur-sm
-            "
-                >
+                <div className="absolute bottom-4 left-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-[10px] font-semibold text-[#6b3f12] backdrop-blur-sm">
                   {String(index + 1).padStart(2, "0")}
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Scroll hint */}
           <div className="mt-3 flex items-center justify-center gap-2">
             <span className="text-[10px] uppercase tracking-[0.25em] text-[#9a7b52]">
               Swipe to explore
             </span>
-
             <span className="text-[#b88a45]">→</span>
           </div>
         </div>
       </section>
 
-      {/* 5. FOOTER PAGE - Detailed Ceremonies & Love Note */}
+      {/* 5. FOOTER PAGE - RSVP, Photo Upload & Love Note */}
       <footer className="py-24 sm:py-32 px-6 bg-stone-950 border-t border-white/10 text-center flex flex-col items-center justify-center">
         {/* RSVP Attendance Section */}
         <div
           id="rsvp-card"
-          className="w-full max-w-xl mx-auto my-10 p-6 sm:p-10 rounded-2xl sm:rounded-3xl border border-amber-400/20 bg-stone-900/40 backdrop-blur-md text-center shadow-2xl"
+          className="w-full max-w-xl mx-auto my-6 p-6 sm:p-10 rounded-2xl sm:rounded-3xl border border-amber-400/20 bg-stone-900/40 backdrop-blur-md text-center shadow-2xl"
         >
           <span className="text-xs font-mono tracking-[0.35em] uppercase text-amber-300/80 block mb-2">
             R.S.V.P
@@ -1076,7 +689,7 @@ export default function WeddingEvents() {
                   />
                 </div>
 
-                {/* Number of Members Choose Box (1, 3, 5 options) */}
+                {/* Number of Members Choose Box */}
                 <div className="w-full text-left mb-6">
                   <label
                     htmlFor="memberCount"
@@ -1212,6 +825,75 @@ export default function WeddingEvents() {
           )}
         </div>
 
+        {/* Share Your Photos & Videos Card */}
+        <div
+          id="share-photos"
+          className="w-full max-w-xl mx-auto mt-6 mb-4 p-6 sm:p-10 rounded-2xl sm:rounded-3xl border border-amber-400/20 bg-stone-900/40 backdrop-blur-md text-center shadow-2xl"
+        >
+          <span className="text-xs font-mono tracking-[0.35em] uppercase text-amber-300/80 block mb-2">
+            Guest Gallery
+          </span>
+          <h3 className="font-script text-4xl sm:text-6xl text-amber-200 mb-3">
+            Capture &amp; Share The Moments
+          </h3>
+          <p className="text-xs sm:text-sm text-zinc-300 font-light mb-7 max-w-md mx-auto leading-relaxed">
+            Captured a candid smile, a dance move, or a special blessing? Upload
+            your photos and videos to our shared wedding album so we can relive
+            every moment through your lens.
+          </p>
+
+          {/* QR Code Frame */}
+          <div className="flex flex-col items-center justify-center mb-7">
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-white shadow-[0_10px_35px_rgba(245,158,11,0.15)] border-2 border-amber-400/50">
+              <div className="relative w-40 h-40 sm:w-44 sm:h-44">
+                <Image
+                  src="/photos-qr.jpg"
+                  alt="Scan QR code to upload wedding photos and videos to Google Photos"
+                  fill
+                  sizes="176px"
+                  className="object-contain"
+                />
+              </div>
+            </div>
+            <span className="mt-3 text-[11px] font-mono tracking-widest uppercase text-zinc-400">
+              Scan with your phone camera
+            </span>
+          </div>
+
+          {/* Direct Google Photos Link & Copy Button */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a
+              href={googlePhotosAlbumUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-7 py-3.5 rounded-full border border-amber-400/80 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-bold text-xs sm:text-sm font-sans tracking-widest uppercase transition-all shadow-lg hover:shadow-amber-500/25 active:scale-95 flex items-center justify-center gap-2"
+            >
+              <svg
+                className="w-4 h-4 shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                />
+              </svg>
+              <span>Upload Photos &amp; Videos ↗</span>
+            </a>
+
+            <button
+              type="button"
+              onClick={handleCopyPhotoLink}
+              className="w-full sm:w-auto px-5 py-3.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white text-xs font-mono tracking-wider uppercase transition-all cursor-pointer active:scale-95"
+            >
+              {copiedLink ? "✓ Link Copied" : "Copy Album Link"}
+            </button>
+          </div>
+        </div>
+
         {/* Divider */}
         <div className="h-[1px] w-24 bg-white/20 my-10" />
 
@@ -1236,7 +918,6 @@ export default function WeddingEvents() {
       {showNoPopup && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
           <div className="relative max-w-md w-full bg-gradient-to-b from-stone-900 via-stone-900 to-stone-950 border border-amber-500/30 rounded-3xl p-6 sm:p-8 text-center shadow-2xl overflow-hidden flex flex-col items-center">
-            {/* Close 'X' button */}
             <button
               type="button"
               onClick={() => setShowNoPopup(false)}
@@ -1246,10 +927,8 @@ export default function WeddingEvents() {
               ✕
             </button>
 
-            {/* Crying Face Animation */}
             <div className="relative inline-flex items-center justify-center my-3 select-none">
               <div className="text-7xl sm:text-8xl animate-bounce">😭</div>
-              {/* Flying Tears */}
               <span className="absolute -left-6 top-6 text-3xl animate-ping opacity-80">
                 💧
               </span>
@@ -1273,7 +952,6 @@ export default function WeddingEvents() {
               </span>
             </div>
 
-            {/* Header Text */}
             <h3 className="font-script text-4xl sm:text-5xl text-amber-200 mb-2">
               Please Come! 🥺💔
             </h3>
@@ -1282,7 +960,6 @@ export default function WeddingEvents() {
               really want you there with us to celebrate!
             </p>
 
-            {/* Playful hint / dodge message */}
             {dodgeCount > 0 && (
               <p className="text-xs font-mono text-amber-300/90 mb-3 animate-pulse">
                 {dodgeCount === 1 && "Oops, the button ran away! 🏃💨"}
@@ -1294,7 +971,6 @@ export default function WeddingEvents() {
               </p>
             )}
 
-            {/* Action Buttons: Yes is prominent, No runs away */}
             <div className="w-full flex flex-col items-center gap-3 mt-2">
               <button
                 type="button"
@@ -1314,7 +990,6 @@ export default function WeddingEvents() {
                 <span>❤️</span>
               </button>
 
-              {/* Running No Button Arena */}
               <div className="relative h-20 w-full flex items-center justify-center overflow-visible">
                 <button
                   type="button"
@@ -1336,7 +1011,6 @@ export default function WeddingEvents() {
               </div>
             </div>
 
-            {/* Discreet escape hatch for guests who truly cannot make it */}
             <button
               type="button"
               onClick={() => {
