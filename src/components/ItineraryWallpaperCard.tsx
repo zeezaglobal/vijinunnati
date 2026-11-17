@@ -18,19 +18,23 @@ interface VenueQR {
   url: string;
 }
 
+type ExtendedCanvasContext = CanvasRenderingContext2D & {
+  letterSpacing?: string;
+};
+
 const ITINERARY_ITEMS: ScheduleItem[] = [
   {
     dayLabel: "FRI • NOV 20",
     title: "Mehendi Ceremony",
     time: "6:00 PM",
-    venue: "Bride's Stay",
+    venue: "Bride's Residence",
     detail: "Theme: Green Hues of Henna",
   },
   {
     dayLabel: "SAT • NOV 21",
     title: "Phoolo vali Haldi",
     time: "4:00 PM",
-    venue: "Bride's Stay",
+    venue: "Bride's Residence",
     detail: "Theme: Marigold / Sunflower",
   },
   {
@@ -59,7 +63,7 @@ const ITINERARY_ITEMS: ScheduleItem[] = [
 const VENUE_QRS: VenueQR[] = [
   {
     id: "bride-residence",
-    title: "Bride's Stay",
+    title: "Bride's Residence",
     subtitle: "Mehendi & Haldi",
     url: "https://maps.app.goo.gl/vcDeJ4tbPdd6YPsU7?g_st=ic",
   },
@@ -82,8 +86,25 @@ export default function ItineraryWallpaperCard() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
+  const drawTrackedText = (
+    ctx: ExtendedCanvasContext,
+    text: string,
+    x: number,
+    y: number,
+    spacingPx: number
+  ) => {
+    ctx.save();
+    if (typeof ctx.letterSpacing !== "undefined") {
+      ctx.letterSpacing = `${spacingPx}px`;
+      ctx.fillText(text, x + spacingPx / 2, y);
+    } else {
+      ctx.fillText(text.split("").join(" "), x, y);
+    }
+    ctx.restore();
+  };
+
   const drawWallpaper = async (canvas: HTMLCanvasElement) => {
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d") as ExtendedCanvasContext | null;
     if (!ctx) return;
 
     const width = 1080;
@@ -126,45 +147,31 @@ export default function ItineraryWallpaperCard() {
     // 3. Header Section (Clears phone lock-screen clock)
     const headerStartY = 235;
 
-    ctx.save();
     ctx.fillStyle = "#a66a1f";
     ctx.font = "600 20px ui-monospace, SFMono-Regular, Menlo, monospace";
     ctx.textAlign = "center";
     ctx.textBaseline = "alphabetic";
-    if ("letterSpacing" in ctx) {
-      ctx.letterSpacing = "7px";
-      ctx.fillText("WEDDING ITINERARY", width / 2 + 3.5, headerStartY);
-    } else {
-      ctx.fillText("W E D D I N G  I T I N E R A R Y", width / 2, headerStartY);
-    }
-    ctx.restore();
+    drawTrackedText(ctx, "WEDDING ITINERARY", width / 2, headerStartY, 7);
 
     // Couple Names
-    ctx.save();
     ctx.fillStyle = "#4a2b12";
     ctx.font = "italic 400 78px Georgia, 'Times New Roman', serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "alphabetic";
     ctx.fillText("Vijin & Unnati", width / 2, headerStartY + 80);
-    ctx.restore();
 
     // Date Range Subtitle
-    ctx.save();
     ctx.fillStyle = "#7a4a16";
     ctx.font = "500 22px ui-monospace, SFMono-Regular, Menlo, monospace";
     ctx.textAlign = "center";
     ctx.textBaseline = "alphabetic";
-    if ("letterSpacing" in ctx) {
-      ctx.letterSpacing = "3px";
-      ctx.fillText(
-        "20 • 21 • 22 NOVEMBER 2026",
-        width / 2 + 1.5,
-        headerStartY + 128
-      );
-    } else {
-      ctx.fillText("20 • 21 • 22 NOVEMBER 2026", width / 2, headerStartY + 128);
-    }
-    ctx.restore();
+    drawTrackedText(
+      ctx,
+      "20 • 21 • 22 NOVEMBER 2026",
+      width / 2,
+      headerStartY + 128,
+      3
+    );
 
     // 4. Centered Divider with Star
     const divY = headerStartY + 166;
@@ -185,7 +192,7 @@ export default function ItineraryWallpaperCard() {
     ctx.fillText("✦", width / 2, divY + 1);
     ctx.restore();
 
-    // 5. Event Cards (Compact height so QR strip fits cleanly below)
+    // 5. Event Cards
     ctx.textBaseline = "alphabetic";
     let currentY = divY + 38;
     const cardX = 104;
@@ -239,7 +246,6 @@ export default function ItineraryWallpaperCard() {
     const qrSectionY = currentY + 12;
     const qrBoxH = 260;
 
-    // Section container
     ctx.fillStyle = "rgba(255, 255, 255, 0.92)";
     ctx.beginPath();
     ctx.roundRect(cardX, qrSectionY, cardW, qrBoxH, 22);
@@ -250,17 +256,16 @@ export default function ItineraryWallpaperCard() {
     ctx.stroke();
 
     // Section header
-    ctx.save();
     ctx.textAlign = "center";
     ctx.fillStyle = "#a66a1f";
     ctx.font = "700 18px ui-monospace, SFMono-Regular, Menlo, monospace";
-    if ("letterSpacing" in ctx) {
-      ctx.letterSpacing = "4px";
-      ctx.fillText("SCAN FOR GOOGLE MAPS DIRECTIONS", width / 2 + 2, qrSectionY + 34);
-    } else {
-      ctx.fillText("SCAN FOR GOOGLE MAPS DIRECTIONS", width / 2, qrSectionY + 34);
-    }
-    ctx.restore();
+    drawTrackedText(
+      ctx,
+      "SCAN FOR GOOGLE MAPS DIRECTIONS",
+      width / 2,
+      qrSectionY + 34,
+      4
+    );
 
     // Render all 3 QR canvases in parallel
     const qrSize = 136;
@@ -283,7 +288,6 @@ export default function ItineraryWallpaperCard() {
         const qrX = centerX - qrSize / 2;
         const qrY = qrSectionY + 50;
 
-        // Subtle frame around each QR code
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(qrX - 6, qrY - 6, qrSize + 12, qrSize + 12);
         ctx.strokeStyle = "rgba(214, 181, 106, 0.7)";
@@ -292,20 +296,18 @@ export default function ItineraryWallpaperCard() {
 
         ctx.drawImage(qrCanvas, qrX, qrY, qrSize, qrSize);
 
-        // Venue Title below QR
         ctx.textAlign = "center";
         ctx.fillStyle = "#27180b";
         ctx.font = "700 18px -apple-system, BlinkMacSystemFont, sans-serif";
         ctx.fillText(venue.title, centerX, qrY + qrSize + 28);
 
-        // Event Subtitle below Venue Title
         ctx.fillStyle = "#806b52";
         ctx.font = "500 16px -apple-system, BlinkMacSystemFont, sans-serif";
         ctx.fillText(venue.subtitle, centerX, qrY + qrSize + 50);
       })
     );
 
-    // 7. Footer Note (Clears bottom lock-screen icons)
+    // 7. Footer Note
     ctx.textAlign = "center";
     ctx.fillStyle = "#806b52";
     ctx.font = "italic 23px Georgia, serif";
@@ -397,7 +399,7 @@ export default function ItineraryWallpaperCard() {
         </span>
       </button>
 
-      {/* Quick Venue Google Maps Links (for direct tapping on web) */}
+      {/* Quick Venue Google Maps Links */}
       <div className="mt-8 pt-6 border-t border-white/10">
         <span className="text-[11px] font-mono tracking-[0.25em] uppercase text-amber-300/80 block mb-3">
           Quick Venue Directions
