@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import ItineraryWallpaperCard from "./ItineraryWallpaperCard";
 
 interface EventDetail {
   id: string;
@@ -27,6 +28,7 @@ const EVENTS: EventDetail[] = [
     day: "Friday",
     time: "6:00pm",
     theme: "Green Hues of Henna",
+    venue: "Bride's Stay",
     image: "/1.PNG",
   },
   {
@@ -38,6 +40,7 @@ const EVENTS: EventDetail[] = [
     day: "Saturday",
     time: "4:00pm",
     theme: "Marigold / Sunflower",
+    venue: "Bride's Stay",
     image: "/2.PNG",
   },
   {
@@ -58,6 +61,7 @@ const EVENTS: EventDetail[] = [
     day: "Sunday",
     time: "5:00 PM onwards",
     dressCode: "Glow in chic western glam",
+    venue: "Vibes Beach House",
     image: "/4.PNG",
   },
 ];
@@ -90,9 +94,10 @@ export default function WeddingEvents() {
     setDodgeCount((prev) => prev + 1);
   };
 
+  // Venue Maps Links
+  const brideStayMapsUrl = "https://maps.app.goo.gl/vcDeJ4tbPdd6YPsU7?g_st=ic";
   const googleMapsUrl =
     "https://maps.google.com/?q=Gardenia+Convention+Center+Njekkadu";
-
   const googleMaps2Url = "https://maps.app.goo.gl/a9bRgHdQkRk19GPr8?g_st=ic";
 
   const googlePhotosAlbumUrl = "https://photos.app.goo.gl/i8X616e7hZXZD7x26";
@@ -178,6 +183,35 @@ export default function WeddingEvents() {
               Theme: {EVENTS[0].theme}
             </span>
           </div>
+
+          {/* Location - Bride's Stay */}
+          <a
+            href={brideStayMapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-5 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-emerald-950/35 bg-[#FFF9ED]/80 hover:bg-[#F2EFE2] text-xs sm:text-sm font-sans tracking-wider uppercase text-emerald-950 hover:text-zinc-950 transition-all cursor-pointer pointer-events-auto shadow-sm backdrop-blur-[2px]"
+          >
+            <svg
+              className="w-4 h-4 text-emerald-900 shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            <span>Bride&apos;s Stay ↗</span>
+          </a>
         </div>
       </section>
 
@@ -224,6 +258,35 @@ export default function WeddingEvents() {
               Theme: {EVENTS[1].theme}
             </span>
           </div>
+
+          {/* Location - Bride's Stay */}
+          <a
+            href={brideStayMapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-5 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-amber-900/40 bg-[#FFF8E8]/80 hover:bg-[#F4E4C4] text-xs sm:text-sm font-sans tracking-wider uppercase text-amber-950 hover:text-zinc-950 transition-all cursor-pointer pointer-events-auto shadow-sm backdrop-blur-[2px]"
+          >
+            <svg
+              className="w-4 h-4 text-amber-800 shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            <span>Bride&apos;s Stay ↗</span>
+          </a>
         </div>
       </section>
 
@@ -267,7 +330,6 @@ export default function WeddingEvents() {
 
         {/* Content */}
         <div className="relative z-10 w-full max-w-4xl mx-auto flex justify-center">
-          {/* Vidhi */}
           <div className="flex flex-col items-center text-center w-full max-w-2xl">
             <span className="text-xs font-mono uppercase tracking-[0.3em] text-[#7A4A16] font-semibold mb-2">
               Marathi Tradition
@@ -587,7 +649,7 @@ export default function WeddingEvents() {
         </div>
       </section>
 
-      {/* 5. FOOTER PAGE - RSVP, Photo Upload & Love Note */}
+      {/* 5. FOOTER PAGE - RSVP, Photo Upload, Itinerary Wallpaper & Love Note */}
       <footer className="py-24 sm:py-32 px-6 bg-stone-950 border-t border-white/10 text-center flex flex-col items-center justify-center">
         {/* RSVP Attendance Section */}
         <div
@@ -893,6 +955,9 @@ export default function WeddingEvents() {
             </button>
           </div>
         </div>
+
+        {/* Downloadable Phone Wallpaper Itinerary & Venue Links */}
+        <ItineraryWallpaperCard />
 
         {/* Divider */}
         <div className="h-[1px] w-24 bg-white/20 my-10" />
